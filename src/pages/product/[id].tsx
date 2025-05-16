@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import Header from '../../components/layout/Header';
 import { useCart } from '../../context/CartContext';
 import toast from 'react-hot-toast';
+import Link from 'next/link';
 
 interface Product {
   id: string;
@@ -123,19 +124,36 @@ const ProductPage: NextPage<ProductPageProps> = ({ product }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="min-h-screen mt-30 bg-[#121212]">
+      <main className="min-h-screen mt-39 bg-[#121212]">
         <Header />
-        <div className="container  mx-auto px-10 py-20 lg:py-19">
+        <div className="container mx-auto px-4 sm:px-10 pt-24 -mt-15 pb-10 sm:pt-25 lg:py-20">
+          {/* Back Button - Mobile Only
+          <Link href="/shop" className="inline-flex items-center text-gray-400 hover:text-white mb-6 sm:hidden">
+            <img src="/icons/back.svg" alt="back" className="w-8 h-8 mr-2" />
+            <span>Back to Shop</span>
+          </Link> */}
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
-            {/* Left Column - Gallery and Product Info */}
-            <div className="flex flex-col space-y-1">
-              {/* Image Gallery */}
-              <div className="flex gap-4 overflow-x-hidden pb-4 scrollbar-hide p-4 ">
+            {/* Left Column - Mobile: Gallery & Info, Desktop: Info only */}
+            <div className="flex flex-col space-y-6">
+              {/* Mobile Preview - Shown only on mobile */}
+              <div className="block lg:hidden relative aspect-square w-full overflow-hidden rounded-2xl bg-gradient-to-b from-[#1A1A1A] to-[#121212]">
+                <Image
+                  src={selectedImage}
+                  alt={product.name}
+                  fill
+                  className="object-contain p-4"
+                  priority
+                />
+              </div>
+
+              {/* Mobile Gallery - Shown only on mobile */}
+              <div className="grid grid-cols-3 gap-3 lg:hidden">
                 {product.gallery.map((img, index) => (
                   <button
                     key={index}
                     onClick={() => setSelectedImage(img)}
-                    className={`relative flex-shrink-0 w-[180px] h-[230px] aspect-square overflow-hidden rounded-xl ${
+                    className={`relative aspect-square overflow-hidden rounded-xl bg-[#1A1A1A] ${
                       selectedImage === img ? 'ring-2 ring-[#F0CC0E]' : ''
                     }`}
                   >
@@ -143,7 +161,27 @@ const ProductPage: NextPage<ProductPageProps> = ({ product }) => {
                       src={img}
                       alt={`${product.name} view ${index + 1}`}
                       fill
-                      className="object-cover h-30"
+                      className="object-contain p-2"
+                    />
+                  </button>
+                ))}
+              </div>
+
+              {/* Desktop Gallery - Hidden on mobile */}
+              <div className="hidden lg:flex gap-4 overflow-x-hidden pb-4 scrollbar-hide p-4">
+                {product.gallery.map((img, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setSelectedImage(img)}
+                    className={`relative flex-shrink-0 w-[180px] h-[230px] overflow-hidden rounded-xl ${
+                      selectedImage === img ? 'ring-2 ring-[#F0CC0E]' : ''
+                    }`}
+                  >
+                    <Image
+                      src={img}
+                      alt={`${product.name} view ${index + 1}`}
+                      fill
+                      className="object-cover"
                     />
                   </button>
                 ))}
@@ -176,52 +214,50 @@ const ProductPage: NextPage<ProductPageProps> = ({ product }) => {
                 <div>
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex flex-start justify-center align-center items-center gap-5">
-                    <h3 className="text-sm font-medium text-white">sizes</h3>
-                    <div className="flex gap-3">
-                    {product.sizes.map((size) => (
-                      <button
-                        key={size}
-                        onClick={() => setSelectedSize(size)}
-                        className={`h-12 w-12 rounded-full border ${
-                          selectedSize === size
-                            ? 'border-[#F0CC0E] bg-[#F0CC0E] text-black'
-                            : 'border-[#2A2A2A] bg-[#1A1A1A] text-white hover:border-[#F0CC0E]'
-                        } text-sm font-medium transition-colors`}
-                      >
-                        {size}
-                      </button>
-                    ))}
-                  </div>
-                  </div>
+                      <h3 className="text-sm font-medium text-white">sizes</h3>
+                      <div className="flex gap-3">
+                        {product.sizes.map((size) => (
+                          <button
+                            key={size}
+                            onClick={() => setSelectedSize(size)}
+                            className={`h-10 sm:h-12 w-10 sm:w-12 rounded-full border ${
+                              selectedSize === size
+                                ? 'border-[#F0CC0E] bg-[#F0CC0E] text-black'
+                                : 'border-[#2A2A2A] bg-[#1A1A1A] text-white hover:border-[#F0CC0E]'
+                            } text-sm font-medium transition-colors`}
+                          >
+                            {size}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                     <button className="text-sm text-[#F0CC0E] hover:underline">
                       size chart
                     </button>
                   </div>
-
                 </div>
 
                 {/* Add to Cart Button */}
                 <button 
                   onClick={handleAddToCart}
-                  className="w-full bg-[#F0CC0E] text-black font-semibold py-4 rounded-full hover:bg-[#F0CC0E]/90 transition-colors"
+                  className="w-full bg-[#F0CC0E] text-black font-semibold py-3 sm:py-4 rounded-full hover:bg-[#F0CC0E]/90 transition-colors"
                 >
-                  Add to cart
+                  Add to Cart
                 </button>
               </div>
             </div>
 
-            {/* Right Column - Main Preview */}
-            <div className="w-[700px] aspect-[4/3]"> {/* or use max-w, responsive classes */}
-
-            <div className="relative h-full w-full overflow-hidden rounded-2xl bg-gradient-to-b from-[#1A1A1A] to-[#121212]">
-              <Image
-                src={selectedImage}
-                alt={product.name}
-                fill
-                className="object-contain"
-                priority
-              />
-            </div>
+            {/* Right Column - Main Preview (Desktop Only) */}
+            <div className="hidden lg:block w-[700px] aspect-[4/3]">
+              <div className="relative h-full w-full overflow-hidden rounded-2xl bg-gradient-to-b from-[#1A1A1A] to-[#121212]">
+                <Image
+                  src={selectedImage}
+                  alt={product.name}
+                  fill
+                  className="object-contain"
+                  priority
+                />
+              </div>
             </div>
           </div>
         </div>

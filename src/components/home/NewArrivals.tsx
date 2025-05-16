@@ -38,7 +38,7 @@ const newArrivals = [
 
 const NewArrivals: React.FC = () => {
   return (
-    <section className="py-24 p-10 bg-[#181818]">
+    <section id="new-arrivals" className="py-24 p-10 bg-[#181818]">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center mb-12">
           <h2 className="text-4xl font-bold text-white">New Arrivals</h2>

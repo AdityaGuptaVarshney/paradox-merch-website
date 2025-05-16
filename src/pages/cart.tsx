@@ -89,37 +89,30 @@ const CartPage: NextPage = () => {
         <meta name="description" content="Your shopping cart" />
       </Head>
 
-      <main className="min-h-screen mt-30 bg-[#121212]">
+      <main className="min-h-screen mt-20 sm:mt-30  bg-[#121212]">
         <Header />
-        <div className="container mx-auto px-15 py-20 ">
+        <div className="container mx-auto px-4 sm:px-15 -mt-5 py-8 sm:py-20 mt-18">
           <div className="max-w-8xl mx-auto">
             <div className="flex justify-between align-center items-center mb-8">
-            <Link href="/" className="text-gray-300 hover:text-white transition-colors">
-            <img src="/icons/back.svg" alt="back" className="w-10 h-10" />
-            </Link>
-            <div className='text-right'>
-            <h1 className="text-3xl font-bold text-white">My Cart</h1>
-            <h3 className='text-[21px] font-semibold text-[#404040]'>Logged in as, Chirag</h3>
+              <Link href="/" className="text-gray-300 hover:text-white transition-colors">
+                <img src="/icons/back.svg" alt="back" className="w-8 sm:w-10 h-8 sm:h-10" />
+              </Link>
+              <div className='text-right'>
+                <h1 className="text-2xl sm:text-3xl font-bold text-white">My Cart</h1>
+                <h3 className='text-[16px] sm:text-[21px] font-semibold text-[#404040]'>Logged in as, Chirag</h3>
+              </div>
             </div>
 
-            </div>
-
-
-
-            <div className="grid grid-cols-1 lg:grid-cols-13 gap-8">
-
-
+            <div className="grid grid-cols-1 lg:grid-cols-13 gap-4 sm:gap-8">
               {/* Cart Items - Left Column */}
               <div className="lg:col-span-6 space-y-4">
-
-
                 {items.map((item) => (
                   <div
                     key={`${item.id}-${item.size}`}
-                    className="flex gap-6 bg-[#1A1A1A] p-6 rounded-2xl"
+                    className="flex flex-col sm:flex-row gap-4 sm:gap-6 bg-[#1A1A1A] p-6 sm:p-6 rounded-2xl"
                   >
                     {/* Product Image */}
-                    <div className="relative w-32 h-32 flex-shrink-0 rounded-xl overflow-hidden">
+                    <div className="relative w-full sm:w-32 h-119 sm:h-32 flex-shrink-0 rounded-xl overflow-hidden">
                       <Image
                         src={item.image}
                         alt={item.name}
@@ -132,14 +125,14 @@ const CartPage: NextPage = () => {
                     <div className="flex-grow">
                       <div className="flex justify-between items-start">
                         <div>
-                          <h3 className="text-white font-medium text-lg mb-1">{item.name}</h3>
-                          <p className="text-gray-400 text-sm mb-4">Size: {item.size}</p>
+                          <h3 className="text-base sm:text-lg font-medium text-white mb-1">{item.name}</h3>
+                          <p className="text-sm text-gray-400 mb-2 sm:mb-4">Size: {item.size}</p>
                           <div className="flex items-center gap-2">
-                            <span className="text-[#F0CC0E] font-semibold text-lg">
+                            <span className="text-base sm:text-lg text-[#F0CC0E] font-semibold">
                               Rs {item.salePrice || item.price}
                             </span>
                             {item.salePrice && (
-                              <span className="text-gray-400 line-through text-sm">
+                              <span className="text-xs sm:text-sm text-gray-400 line-through">
                                 Rs {item.price}
                               </span>
                             )}
@@ -156,7 +149,7 @@ const CartPage: NextPage = () => {
                       </div>
 
                       {/* Quantity Controls */}
-                      <div className="mt-6">
+                      <div className="mt-4 sm:mt-6">
                         <div className="flex items-center gap-3">
                           <button
                             onClick={() => updateQuantity(item.id, item.size, Math.max(1, item.quantity - 1))}
@@ -178,20 +171,15 @@ const CartPage: NextPage = () => {
                 ))}
               </div>
 
-
-
               {/* Right Column - Collection Mode & Order Summary */}
-              <div className="lg:col-span-7 space-y-6">
-
-
-                
+              <div className="lg:col-span-7 space-y-4 sm:space-y-6">
                 {/* Mode of Collection */}
-                <div className="bg-[#1A1A1A] p-6 rounded-2xl">
-                  <h2 className="text-lg font-bold text-white mb-4">Mode of Collection</h2>
-                  <div className="flex justify-center items-center gap-2">
+                <div className="bg-[#1A1A1A] p-4 sm:p-6 rounded-2xl">
+                  <h2 className="text-lg sm:text-xl font-bold text-white mb-4">Mode of Collection</h2>
+                  <div className="flex flex-col sm:flex-row justify-center items-stretch sm:items-center gap-3 sm:gap-2">
                     <button
                       onClick={() => setCollectionMode('delivery')}
-                      className="w-full flex items-center justify-between p-4 rounded-xl border transition-colors"
+                      className="w-full flex items-center justify-between p-3 sm:p-4 rounded-xl border transition-colors"
                       style={{
                         borderColor: collectionMode === 'delivery' ? '#F0CC0E' : '#2A2A2A',
                         backgroundColor: collectionMode === 'delivery' ? '#1A1A1A' : '#1A1A1A'
@@ -218,7 +206,7 @@ const CartPage: NextPage = () => {
 
                     <button
                       onClick={() => setCollectionMode('pickup')}
-                      className="w-full flex items-center justify-between p-4 rounded-xl border transition-colors"
+                      className="w-full flex items-center justify-between p-3 sm:p-4 rounded-xl border transition-colors"
                       style={{
                         borderColor: collectionMode === 'pickup' ? '#F0CC0E' : '#2A2A2A',
                         backgroundColor: collectionMode === 'pickup' ? '#1A1A1A' : '#1A1A1A'
@@ -244,12 +232,12 @@ const CartPage: NextPage = () => {
                     </button>
                   </div>
 
-                  {/* Delivery Form - Animated */}
+                  {/* Delivery Form */}
                   <div className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                    collectionMode === 'delivery' ? 'max-h-[1000px] mt-6 p-1' : 'max-h-0'
+                    collectionMode === 'delivery' ? 'max-h-[2000px] mt-4 sm:mt-6 p-1' : 'max-h-0'
                   }`}>
                     <form className="space-y-4">
-                      {/* Full Name */}
+                      {/* Form fields with mobile optimization */}
                       <div className="space-y-2">
                         <label className="text-sm font-medium text-gray-400">Full Name:</label>
                         <input
@@ -257,7 +245,7 @@ const CartPage: NextPage = () => {
                           name="fullName"
                           value={deliveryForm.fullName}
                           onChange={handleDeliveryFormChange}
-                          className="w-full px-4 py-3 bg-[#2A2A2A] rounded-xl text-white text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#F0CC0E]"
+                          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-[#2A2A2A] rounded-xl text-white text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#F0CC0E]"
                         />
                       </div>
 
@@ -269,7 +257,7 @@ const CartPage: NextPage = () => {
                           value={deliveryForm.address}
                           onChange={handleDeliveryFormChange}
                           rows={3}
-                          className="w-full px-4 py-3 bg-[#2A2A2A] rounded-xl text-white text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#F0CC0E] resize-none"
+                          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-[#2A2A2A] rounded-xl text-white text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#F0CC0E] resize-none"
                         />
                       </div>
 
@@ -281,7 +269,7 @@ const CartPage: NextPage = () => {
                           name="landmark"
                           value={deliveryForm.landmark}
                           onChange={handleDeliveryFormChange}
-                          className="w-full px-4 py-3 bg-[#2A2A2A] rounded-xl text-white text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#F0CC0E]"
+                          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-[#2A2A2A] rounded-xl text-white text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#F0CC0E]"
                         />
                       </div>
 
@@ -293,7 +281,7 @@ const CartPage: NextPage = () => {
                             name="city"
                             value={deliveryForm.city}
                             onChange={handleDeliveryFormChange}
-                            className="w-full px-4 py-3 bg-[#2A2A2A] rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#F0CC0E] appearance-none cursor-pointer"
+                            className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-[#2A2A2A] rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#F0CC0E] appearance-none cursor-pointer"
                           >
                             <option value="">Select City</option>
                             {CITIES.map(city => (
@@ -308,7 +296,7 @@ const CartPage: NextPage = () => {
                             name="pincode"
                             value={deliveryForm.pincode}
                             onChange={handleDeliveryFormChange}
-                            className="w-full px-4 py-3 bg-[#2A2A2A] rounded-xl text-white text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#F0CC0E]"
+                            className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-[#2A2A2A] rounded-xl text-white text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#F0CC0E]"
                           />
                         </div>
                       </div>
@@ -321,7 +309,7 @@ const CartPage: NextPage = () => {
                             name="state"
                             value={deliveryForm.state}
                             onChange={handleDeliveryFormChange}
-                            className="w-full px-4 py-3 bg-[#2A2A2A] rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#F0CC0E] appearance-none cursor-pointer"
+                            className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-[#2A2A2A] rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#F0CC0E] appearance-none cursor-pointer"
                           >
                             <option value="">Select State</option>
                             {STATES.map(state => (
@@ -335,7 +323,7 @@ const CartPage: NextPage = () => {
                             name="country"
                             value={deliveryForm.country}
                             onChange={handleDeliveryFormChange}
-                            className="w-full px-4 py-3 bg-[#2A2A2A] rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#F0CC0E] appearance-none cursor-pointer"
+                            className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-[#2A2A2A] rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#F0CC0E] appearance-none cursor-pointer"
                           >
                             <option value="">Select Country</option>
                             {COUNTRIES.map(country => (
@@ -353,7 +341,7 @@ const CartPage: NextPage = () => {
                           name="phone"
                           value={deliveryForm.phone}
                           onChange={handleDeliveryFormChange}
-                          className="w-full px-4 py-3 bg-[#2A2A2A] rounded-xl text-white text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#F0CC0E]"
+                          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-[#2A2A2A] rounded-xl text-white text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#F0CC0E]"
                         />
                       </div>
 
@@ -364,18 +352,18 @@ const CartPage: NextPage = () => {
                           name="alternatePhone"
                           value={deliveryForm.alternatePhone}
                           onChange={handleDeliveryFormChange}
-                          className="w-full px-4 py-3 bg-[#2A2A2A] rounded-xl text-white text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#F0CC0E]"
+                          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-[#2A2A2A] rounded-xl text-white text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#F0CC0E]"
                         />
                       </div>
 
                       {/* Terms and Conditions */}
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-start sm:items-center gap-3">
                         <input
                           type="checkbox"
                           name="termsAccepted"
                           checked={deliveryForm.termsAccepted}
                           onChange={handleDeliveryFormChange}
-                          className="w-5 h-5 rounded border-gray-400 text-[#F0CC0E] focus:ring-[#F0CC0E] bg-[#2A2A2A]"
+                          className="w-5 h-5 mt-0.5 sm:mt-0 rounded border-gray-400 text-[#F0CC0E] focus:ring-[#F0CC0E] bg-[#2A2A2A]"
                         />
                         <label className="text-sm text-gray-400">
                           I hereby confirm that I have read the terms and conditions
@@ -385,7 +373,7 @@ const CartPage: NextPage = () => {
                       {/* Save Button */}
                       <button
                         type="submit"
-                        className="w-full bg-[#2A2A2A] text-white font-semibold py-4 rounded-xl hover:bg-[#2A2A2A]/90 transition-colors"
+                        className="w-full bg-[#2A2A2A] text-white font-semibold py-3 sm:py-4 rounded-xl hover:bg-[#2A2A2A]/90 transition-colors"
                       >
                         Save Address
                       </button>
@@ -394,49 +382,47 @@ const CartPage: NextPage = () => {
                 </div>
 
                 {/* Order Summary */}
-                <div className="bg-[#1A1A1A] p-6 rounded-2xl">
-                  <h2 className="text-lg font-bold text-white mb-6">Order Summary</h2>
-                  <div className="space-y-4 mb-6">
+                <div className="bg-[#141414] p-4 sm:p-6 rounded-2xl">
+                  <div className="space-y-6">
+                    {/* Subtotal Row */}
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-400">Subtotal</span>
-                      <div className="flex items-center gap-2">
-                        <span className="text-white font-medium">Rs {getCartTotal()}</span>
-                      </div>
+                      <span className="text-[#404040] text-lg sm:text-2xl font-semibold">Subtotal:</span>
+                      <span className="text-[#404040] text-lg sm:text-2xl font-semibold">
+                        Rs {getCartTotal()}
+                      </span>
                     </div>
+
+                    {/* Offer Type Row */}
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-400">Shipping</span>
-                      <div className="flex items-center gap-2">
-                        <span className="text-white font-medium">
-                          {collectionMode === 'pickup' ? 'Free' : 'Rs 100'}
+                      <span className="text-[#404040] text-lg sm:text-2xl font-semibold">Offer Type:</span>
+                      <div className="px-4 py-1.5 rounded-[55px] bg-[#2C1000] border-[3px] border-gradient-to-r from-[#BD450E] via-[#F56E2F] to-[#CB5621]">
+                        <span className="text-[#E8722E] text-base sm:text-lg font-semibold">
+                          early bird offer
                         </span>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Discount Code */}
-                  <div className="mb-6">
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        placeholder="Discount code"
-                        className="flex-grow px-4 py-3 bg-[#2A2A2A] rounded-xl text-white text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#F0CC0E]"
-                      />
-                      <button className="px-6 py-3 bg-[#2A2A2A] text-white text-sm font-medium rounded-xl hover:bg-[#3A3A3A] transition-colors">
-                        Apply
-                      </button>
+                    {/* Total Discount Row */}
+                    <div className="flex justify-between items-center">
+                      <span className="text-[#404040] text-lg sm:text-2xl font-semibold">Total Discount</span>
+                      <span className="text-[#404040] text-lg sm:text-2xl font-semibold">
+                        Rs 200.00
+                      </span>
                     </div>
-                  </div>
 
-                  <div className="border-t border-[#2A2A2A] pt-6">
-                    <div className="flex justify-between items-center mb-6">
-                      <span className="text-sm text-white font-medium">Total</span>
-                      <div className="flex items-baseline gap-2">
-                        <span className="text-2xl text-white font-bold">
-                          Rs {getCartTotal() + (collectionMode === 'pickup' ? 0 : 100)}
-                        </span>
-                      </div>
+                    {/* Divider */}
+                    <div className="border-t-[2.5px] border-[#DFDFDF] border-dashed"></div>
+
+                    {/* Total Row */}
+                    <div className="flex justify-between items-center">
+                      <span className="text-[#DFDFDF] text-xl sm:text-3xl font-semibold">Total:</span>
+                      <span className="text-[#DFDFDF] text-xl sm:text-3xl font-semibold">
+                        Rs {getCartTotal() - 200}
+                      </span>
                     </div>
-                    <button className="w-full bg-[#F0CC0E] text-black font-semibold py-4 rounded-xl hover:bg-[#F0CC0E]/90 transition-colors">
+
+                    {/* Proceed Button */}
+                    <button className="w-full bg-[#F0CC0E] text-black font-semibold py-3 sm:py-4 rounded-xl hover:bg-[#F0CC0E]/90 transition-colors text-lg">
                       Proceed to Checkout
                     </button>
                   </div>

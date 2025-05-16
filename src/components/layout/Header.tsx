@@ -28,7 +28,7 @@ const Header: React.FC = () => {
             alt="Paradox Logo"
             width={90}
             height={30}
-            className="h-16 w-auto hidden sm:block"
+            className="h-16 w-auto  sm:block"
           />
 
           {/* Right side - Navigation & Icons */}
