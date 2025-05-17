@@ -1,20 +1,32 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-interface CartItem {
+interface BaseCartItem {
   id: string;
   name: string;
   price: number;
   salePrice?: number;
   image: string;
-  size: string;
   quantity: number;
 }
+
+interface ProductCartItem extends BaseCartItem {
+  type: 'product';
+  size: string;
+}
+
+interface ExperienceCartItem extends BaseCartItem {
+  type: 'experience';
+  startTime: string;
+  duration: string;
+}
+
+type CartItem = ProductCartItem | ExperienceCartItem;
 
 interface CartContextType {
   items: CartItem[];
   addToCart: (item: CartItem) => void;
-  removeFromCart: (itemId: string, size: string) => void;
-  updateQuantity: (itemId: string, size: string, quantity: number) => void;
+  removeFromCart: (itemId: string, identifier: string) => void;
+  updateQuantity: (itemId: string, identifier: string, quantity: number) => void;
   clearCart: () => void;
   getCartTotal: () => number;
   getItemCount: () => number;
@@ -41,7 +53,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const addToCart = (newItem: CartItem) => {
     setItems(currentItems => {
       const existingItemIndex = currentItems.findIndex(
-        item => item.id === newItem.id && item.size === newItem.size
+        item => {
+          if (item.type === 'product' && newItem.type === 'product') {
+            return item.id === newItem.id && item.size === newItem.size;
+          }
+          if (item.type === 'experience' && newItem.type === 'experience') {
+            return item.id === newItem.id && item.startTime === newItem.startTime;
+          }
+          return false;
+        }
       );
 
       if (existingItemIndex > -1) {
@@ -56,19 +76,29 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-  const removeFromCart = (itemId: string, size: string) => {
+  const removeFromCart = (itemId: string, identifier: string) => {
     setItems(currentItems =>
-      currentItems.filter(item => !(item.id === itemId && item.size === size))
+      currentItems.filter(item => {
+        if (item.type === 'product') {
+          return !(item.id === itemId && item.size === identifier);
+        }
+        return !(item.id === itemId && item.startTime === identifier);
+      })
     );
   };
 
-  const updateQuantity = (itemId: string, size: string, quantity: number) => {
+  const updateQuantity = (itemId: string, identifier: string, quantity: number) => {
     setItems(currentItems =>
-      currentItems.map(item =>
-        item.id === itemId && item.size === size
+      currentItems.map(item => {
+        if (item.type === 'product') {
+          return item.id === itemId && item.size === identifier
+            ? { ...item, quantity }
+            : item;
+        }
+        return item.id === itemId && item.startTime === identifier
           ? { ...item, quantity }
-          : item
-      )
+          : item;
+      })
     );
   };
 

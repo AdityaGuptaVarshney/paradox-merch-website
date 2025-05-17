@@ -109,6 +109,7 @@ const ProductPage: NextPage<ProductPageProps> = ({ product }) => {
       image: product.image,
       size: selectedSize,
       quantity: 1,
+      type: 'product'
     });
 
     toast.success('Added to cart!');
@@ -161,7 +162,7 @@ const ProductPage: NextPage<ProductPageProps> = ({ product }) => {
                       src={img}
                       alt={`${product.name} view ${index + 1}`}
                       fill
-                      className="object-contain p-2"
+                      className="object-cover "
                     />
                   </button>
                 ))}
@@ -246,15 +247,15 @@ const ProductPage: NextPage<ProductPageProps> = ({ product }) => {
                 </button>
               </div>
             </div>
-
+                        
             {/* Right Column - Main Preview (Desktop Only) */}
-            <div className="hidden lg:block w-[700px] aspect-[4/3]">
+            <div className="hidden lg:block w-[85%] aspect-[1/1] ml-12">
               <div className="relative h-full w-full overflow-hidden rounded-2xl bg-gradient-to-b from-[#1A1A1A] to-[#121212]">
                 <Image
                   src={selectedImage}
                   alt={product.name}
                   fill
-                  className="object-contain"
+                  className="object-cover object-top "
                   priority
                 />
               </div>

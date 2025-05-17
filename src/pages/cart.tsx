@@ -108,7 +108,7 @@ const CartPage: NextPage = () => {
               <div className="lg:col-span-6 space-y-4">
                 {items.map((item) => (
                   <div
-                    key={`${item.id}-${item.size}`}
+                    key={`${item.id}-${item.type === 'experience' ? item.startTime : item.size}`}
                     className="flex flex-col sm:flex-row gap-4 sm:gap-6 bg-[#1A1A1A] p-6 sm:p-6 rounded-2xl"
                   >
                     {/* Product Image */}
@@ -126,7 +126,19 @@ const CartPage: NextPage = () => {
                       <div className="flex justify-between items-start">
                         <div>
                           <h3 className="text-base sm:text-lg font-medium text-white mb-1">{item.name}</h3>
-                          <p className="text-sm text-gray-400 mb-2 sm:mb-4">Size: {item.size}</p>
+                          {item.type === 'experience' ? (
+                            <>
+                              <p className="text-sm text-gray-400 mb-1">Start Time: {item.startTime}</p>
+                              <p className="text-sm text-gray-400 mb-2">Duration: {item.duration}</p>
+                              {(item.id === 'laser-tag' || item.id === 'linkedin-headshot') && (
+                                <button className="text-[#F0CC0E] text-sm hover:underline mb-2">
+                                  View Details
+                                </button>
+                              )}
+                            </>
+                          ) : (
+                            <p className="text-sm text-gray-400 mb-2">Size: {item.size}</p>
+                          )}
                           <div className="flex items-center gap-2">
                             <span className="text-base sm:text-lg text-[#F0CC0E] font-semibold">
                               Rs {item.salePrice || item.price}
@@ -139,7 +151,7 @@ const CartPage: NextPage = () => {
                           </div>
                         </div>
                         <button
-                          onClick={() => removeFromCart(item.id, item.size)}
+                          onClick={() => removeFromCart(item.id, item.type === 'experience' ? item.startTime : item.size)}
                           className="text-gray-400 hover:text-red-500 transition-colors"
                         >
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -152,14 +164,14 @@ const CartPage: NextPage = () => {
                       <div className="mt-4 sm:mt-6">
                         <div className="flex items-center gap-3">
                           <button
-                            onClick={() => updateQuantity(item.id, item.size, Math.max(1, item.quantity - 1))}
+                            onClick={() => updateQuantity(item.id, item.type === 'experience' ? item.startTime : item.size, Math.max(1, item.quantity - 1))}
                             className="w-8 h-8 flex items-center justify-center rounded-full bg-[#2A2A2A] text-white hover:bg-[#3A3A3A] transition-colors"
                           >
                             -
                           </button>
                           <span className="text-white w-8 text-center">{item.quantity}</span>
                           <button
-                            onClick={() => updateQuantity(item.id, item.size, item.quantity + 1)}
+                            onClick={() => updateQuantity(item.id, item.type === 'experience' ? item.startTime : item.size, item.quantity + 1)}
                             className="w-8 h-8 flex items-center justify-center rounded-full bg-[#2A2A2A] text-white hover:bg-[#3A3A3A] transition-colors"
                           >
                             +

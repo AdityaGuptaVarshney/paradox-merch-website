@@ -2,11 +2,25 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-const Hero: React.FC = () => {
+interface HeroProps {
+  onShopNow?: () => void;
+}
+
+const Hero: React.FC<HeroProps> = ({ onShopNow }) => {
   const scrollToNewArrivals = () => {
-    const newArrivalsSection = document.getElementById('new-arrivals');
-    if (newArrivalsSection) {
-      newArrivalsSection.scrollIntoView({ behavior: 'smooth' });
+    if (onShopNow) {
+      onShopNow();
+      setTimeout(() => {
+        const newArrivalsSection = document.getElementById('new-arrivals');
+        if (newArrivalsSection) {
+          newArrivalsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      const newArrivalsSection = document.getElementById('new-arrivals');
+      if (newArrivalsSection) {
+        newArrivalsSection.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   };
 

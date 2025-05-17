@@ -76,11 +76,11 @@ const Header: React.FC = () => {
             {Array(10).fill(null).map((_, i) => (
               <React.Fragment key={i}>
                 <span>paradox</span>
-                <span className="text-gray-400">merch store</span>
+                <span className="text-gray-400">Store</span>
                 <span>paradox</span>
-                <span className="text-gray-400">merch store</span>
+                <span className="text-gray-400">Store</span>
                 <span>paradox</span>
-                <span className="text-gray-400">merch store</span>
+                <span className="text-gray-400">Store</span>
               </React.Fragment>
             ))}
           </div>
