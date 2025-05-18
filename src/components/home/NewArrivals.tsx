@@ -1,6 +1,10 @@
 import React from 'react';
 import ProductCard from '../product/ProductCard';
 
+interface NewArrivalsProps {
+  onGoToExperiences?: () => void;
+}
+
 const newArrivals = [
   {
     id: 'hoodie-1',
@@ -36,15 +40,30 @@ const newArrivals = [
   },
 ];
 
-const NewArrivals: React.FC = () => {
+const NewArrivals: React.FC<NewArrivalsProps> = ({ onGoToExperiences }) => {
+  const handleGoToExperiences = () => {
+    if (onGoToExperiences) {
+      onGoToExperiences();
+      setTimeout(() => {
+        const experiencesSection = document.getElementById('experiences-section');
+        if (experiencesSection) {
+          experiencesSection.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    }
+  };
+
   return (
     <section id="new-arrivals" className="py-24 p-10 bg-[#181818]">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center mb-12">
           <h2 className="text-4xl font-bold text-white">New Arrivals</h2>
-          <a href="/shop" className="text-gray-300 hover:text-white transition-colors">
-            View All →
-          </a>
+          <button 
+            onClick={handleGoToExperiences}
+            className="text-gray-300 hover:text-white transition-colors"
+          >
+            Go to Experiences →
+          </button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {newArrivals.map((product) => (

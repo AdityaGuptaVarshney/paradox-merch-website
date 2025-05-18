@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useCart } from '../../context/CartContext';
 
 interface ProductCardProps {
   id: string;
@@ -19,6 +20,24 @@ const ProductCard: React.FC<ProductCardProps> = ({
   salePercentage,
   image,
 }) => {
+  const { addToCart } = useCart();
+  const [selectedSize, setSelectedSize] = useState('M');
+  const [showSizeSelector, setShowSizeSelector] = useState(false);
+
+  const handleAddToCart = () => {
+    addToCart({
+      id,
+      name,
+      price,
+      salePrice,
+      image,
+      size: selectedSize,
+      quantity: 1,
+      type: 'product'
+    });
+    setShowSizeSelector(false);
+  };
+
   return (
     <div className="w-full">
       <Link href={`/product/${id}`} className="block">
