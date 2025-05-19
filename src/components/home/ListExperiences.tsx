@@ -11,7 +11,7 @@ const experiences = [
     name: 'LASER TAG',
     price: 499,
     description: 'Experience the thrill of laser tag with your friends. Dodge, hide, and score points in a neon-lit arena!',
-    image: '/images/experiences/laser-tag.jpg',
+    image: '/images/experiences/lazer.jpg',
     duration: '60 mins',
     hasDetails: true,
     startTimes: ['10:00 AM', '2:00 PM', '6:00 PM']
@@ -21,7 +21,7 @@ const experiences = [
     name: 'LINKEDIN HEADSHOT',
     price: 299,
     description: 'Get a professional LinkedIn headshot taken by our expert photographers. Perfect for your next career move.',
-    image: '/images/experiences/linkedin.jpg',
+    image: '/images/experiences/linkedin_headshot.jpg',
     duration: '30 mins',
     hasDetails: true,
     startTimes: ['11:00 AM', '3:00 PM', '5:00 PM']
@@ -31,7 +31,7 @@ const experiences = [
     name: 'Prom Night',
     price: 999,
     description: 'Dance the night away at our glamorous prom night. Dress up, enjoy music, and make memories!',
-    image: '/images/experiences/prom.jpg',
+    image: '/images/experiences/prom_night.png',
     duration: '240 mins',
     hasDetails: false,
     startTimes: ['7:00 PM']

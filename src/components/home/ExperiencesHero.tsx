@@ -24,7 +24,7 @@ const ExperiencesHero: React.FC<ExperiencesHeroProps> = ({ onExploreNow }) => {
   };
 
   return (
-    <section className="relative -mt-25 mb-35">
+    <section className="relative mt-1 mb-36">
       {/* Animated background */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-b from-[#870000]/20 to-transparent blur-[300px]" />
@@ -33,68 +33,51 @@ const ExperiencesHero: React.FC<ExperiencesHeroProps> = ({ onExploreNow }) => {
       </div>
 
       {/* Main content */}
-      <div className="relative mx-4 mt-16 sm:mx-8 md:mx-10 lg:m-14 mb-4 sm:p-4 bg-[#141414] rounded-[20px] sm:rounded-[24px] overflow-visible">
+      <div className="relative mx-4 sm:mx-8 md:mx-5 lg:m-14 mt-4 mb-9 sm:p-4 bg-[#141414] rounded-[20px] sm:rounded-[24px] overflow-visible">
+        {/* Desktop gradient overlay behind everything */}
+        <div className="absolute inset-0 bg-gradient-to-l from-[#131313] via-[#131313]/90 to-transparent hidden md:block z-0 pointer-events-none"></div>
         {/* Dashed Container */}
-        <div className="relative bg-[#131313] rounded-[18px] sm:rounded-[22px] border-2 border-dashed border-[#424242] p-4 sm:p-6 md:p-8 min-h-[180px] sm:min-h-[220px] flex flex-col-reverse md:flex-row items-center justify-between overflow-visible">
-          {/* Images on the left, overflowing */}
-          <div className="relative w-full md:w-1/2 flex justify-start md:justify-end h-[160px] sm:h-[220px] md:h-[260px] lg:h-[300px] -ml-6 md:-ml-12 lg:-ml-20 overflow-visible z-0">
-            <div className="flex items-end gap-2 md:gap-4">
-              <div className="w-[90px] sm:w-[130px] md:w-[160px] lg:w-[180px] drop-shadow-xl">
-                <Image
-                  src="/images/products/tshirt-2.png"
-                  alt="Experience 1"
-                  width={180}
-                  height={300}
-                  className="w-full h-auto object-contain transform scale-110 origin-bottom"
-                  priority
-                />
-              </div>
-              <div className="w-[90px] sm:w-[130px] md:w-[160px] lg:w-[180px] drop-shadow-xl">
-                <Image
-                  src="/images/products/tshirt-3.png"
-                  alt="Experience 2"
-                  width={180}
-                  height={300}
-                  className="w-full h-auto object-contain transform scale-110 origin-bottom"
-                  priority
-                />
-              </div>
-            </div>
+        <div className="relative bg-[#131313] rounded-[18px] sm:rounded-[22px] border-2 border-dashed border-[#424242] p-4 sm:p-6 md:p-8 min-h-[180px] sm:min-h-[220px] flex flex-col md:flex-row items-center justify-between overflow-visible gap-4 z-10">
+          {/* Image on top for mobile, left for desktop */}
+          <div className="w-full md:w-1/2 flex justify-center items-center">
+            <Image
+              src="/backgrounds/hero/paradox-exp-banner.png"
+              alt="Experience 1"
+              width={400}
+              height={200}
+              className="w-full max-w-[400px] h-auto object-contain transform scale-110 origin-bottom"
+              priority
+            />
           </div>
 
-          {/* Text content on the right */}
-          <div className="relative w-full md:w-1/2 z-10 md:pl-8">
-            <div className="relative z-20">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3 sm:mb-4">
-                <span className="block">paradox</span>
-                <span className="text-gradient-red">experiences</span>
-              </h1>
-              <p className="hidden md:block text-base sm:text-lg text-gray-300 mb-6">
-                Immerse yourself in unforgettable experiences. From thrilling adventures to exclusive events, create memories with Paradox.
-              </p>
-              <button
-                onClick={scrollToExperiences}
-                className="inline-flex items-center px-6 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-r from-[#870000] to-[#E91313] text-white font-semibold rounded-full hover:opacity-90 transition-opacity text-sm sm:text-base"
+          {/* Text content on bottom for mobile, right for desktop */}
+          <div className="w-full md:w-1/2 flex flex-col items-center md:items-start text-center md:text-left">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3 sm:mb-4">
+              <span className="block">paradox</span>
+              <span className="text-gradient-red">experiences</span>
+            </h1>
+            <p className="text-base sm:text-lg text-gray-300 mb-6">
+              Immerse yourself in unforgettable experiences. From thrilling adventures to exclusive events, create memories with Paradox.
+            </p>
+            <button
+              onClick={scrollToExperiences}
+              className="inline-flex items-center px-6 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-r from-[#870000] to-[#E91313] text-white font-semibold rounded-full hover:opacity-90 transition-opacity text-sm sm:text-base"
+            >
+              Explore Now
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4 sm:h-5 sm:w-5 ml-2"
+                viewBox="0 0 20 20"
+                fill="currentColor"
               >
-                Explore Now
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 sm:h-5 sm:w-5 ml-2"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </button>
-            </div>
+                <path
+                  fillRule="evenodd"
+                  d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
           </div>
-
-          {/* Mobile gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-l from-[#131313] via-[#131313]/90 to-transparent md:hidden z-10"></div>
         </div>
       </div>
     </section>
