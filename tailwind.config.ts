@@ -13,9 +13,14 @@ const config: Config = {
           '0%': { transform: 'translateX(0)' },
           '100%': { transform: 'translateX(-50%)' },
         },
+        slideUp: {
+          '0%': { transform: 'translateY(100%)' },
+          '100%': { transform: 'translateY(0)' },
+        },
       },
       animation: {
         scroll: 'scroll 20s linear infinite',
+        slideUp: 'slideUp 0.35s cubic-bezier(0.4,0,0.2,1)',
       },
       colors: {
         paradox: {

@@ -36,7 +36,7 @@ const categories = [
 
 const Categories: React.FC = () => {
   return (
-    <section className="m-10 bg-[#181818]">
+    <section className="m-2 md:mx-10 bg-[#181818]">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {categories.map((category) => (

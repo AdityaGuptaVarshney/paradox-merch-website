@@ -54,13 +54,13 @@ const NewArrivals: React.FC<NewArrivalsProps> = ({ onGoToExperiences }) => {
   };
 
   return (
-    <section id="new-arrivals" className="py-24 p-10 bg-[#181818]">
+    <section id="new-arrivals" className="py-24 m-2 md:mx-10 bg-[#181818]">
       <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center mb-12">
-          <h2 className="text-4xl font-bold text-white">New Arrivals</h2>
+        <div className="flex flex-col md:flex-row justify-between items-center mb-12">
+          <h2 className="text-4xl font-bold text-white mb-4 md:mb-0">New Arrivals</h2>
           <button 
             onClick={handleGoToExperiences}
-            className="text-gray-300 hover:text-white transition-colors"
+            className="bg-gradient-to-r from-[#870000] to-[#E91313] bg-clip-text text-transparent font-bold hover:text-white transition-colors"
           >
             Go to Experiences →
           </button>

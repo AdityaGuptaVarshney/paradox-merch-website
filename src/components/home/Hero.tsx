@@ -32,6 +32,7 @@ const Hero: React.FC<HeroProps> = ({ onShopNow }) => {
         <div className="absolute top-1/4 left-1/4 w-72 h-72 md:w-96 md:h-96 rounded-full bg-[#1317E9]/20 blur-[125px]" />
         <div className="absolute bottom-1/4 right-1/4 w-72 h-72 md:w-96 md:h-96 rounded-full bg-[#1B1DBD]/20 blur-[125px]" />
       </div>
+      {/* TEST: SlideUp Animation */}
 
       {/* Main content */}
       <div className="relative mx-4 mt-28 sm:mx-8 md:mx-10 lg:m-14 mb-4 sm:p-4 bg-[#141414] rounded-[20px] sm:rounded-[24px] overflow-visible">
