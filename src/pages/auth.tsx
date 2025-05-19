@@ -1,9 +1,13 @@
+'use client';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useAuth } from '../context/AuthContext';
+import { useEffect, useState } from 'react';
 
 const AuthPage: NextPage = () => {
-  const { signInWithGoogle } = useAuth();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const { signInWithGoogle } = mounted ? useAuth() : { signInWithGoogle: () => {} };
 
   return (
     <>
