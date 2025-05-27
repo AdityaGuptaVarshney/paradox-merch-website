@@ -36,6 +36,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
           if (data) {
             localStorage.setItem('authToken', data.userLogin.token);
+            localStorage.setItem('memberData', JSON.stringify(data.userLogin.member)); // ✅ new line
             setMemberData(data.userLogin.member);
           }
         } catch (error) {
@@ -52,6 +53,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => unsubscribe();
   }, [loginMutation]);
 
+  useEffect(() => {
+    const storedMemberData = localStorage.getItem('memberData');
+    if (storedMemberData) {
+      setMemberData(JSON.parse(storedMemberData));
+    }
+  }, []);
+
   const signInWithGoogle = async () => {
     try {
       await signInWithPopup(auth, googleProvider);
@@ -66,6 +74,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       await signOut(auth);
       localStorage.removeItem('authToken');
+      localStorage.removeItem('memberData');
       setMemberData(null);
       router.push('/auth');
     } catch (error) {

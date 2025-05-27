@@ -7,89 +7,61 @@ import Header from '../../components/layout/Header';
 import { useCart } from '../../context/CartContext';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
+import { gql } from '@apollo/client';
+import { client } from '@/lib/apollo';
+import Gallery from '@/components/gallery';
+import { Product } from '@/utils/gql.generated';
 
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  salePrice?: number;
-  salePercentage?: number;
-  image: string;
-  description?: string;
-  sizes: string[];
-  gallery: string[];
-}
+
+
+
 
 interface ProductPageProps {
   product: Product;
 }
 
-const products: Product[] = [
-  {
-    id: 'hoodie-1',
-    name: 'Paradox - Spy themed Unisex Hoodie',
-    price: 999,
-    salePrice: 799,
-    salePercentage: 30,
-    image: '/images/products/hoodie-1.jpg',
-    description: 'Introducing our premium spy-themed unisex hoodie, crafted for both style and comfort. Made from high-quality cotton blend fabric, featuring a sleek design with our signature Paradox branding.',
-    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
-    gallery: [
-      '/images/products/hoodie-1.jpg',
-      '/images/products/hoodie-2.jpg',
-      '/images/products/hoodie-3.jpg',
-    ]
-  },
-  {
-    id: 'tshirt-1',
-    name: 'Paradox - Spy themed Unisex T-shirt',
-    price: 599,
-    salePrice: 499,
-    salePercentage: 25,
-    image: '/images/products/tshirt-1.jpg',
-    description: 'Our signature spy-themed t-shirt combines style with comfort. Made from premium cotton, featuring our iconic Paradox design.',
-    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
-    gallery: [
-      '/images/products/tshirt-1.jpg',
-      '/images/products/tshirt-2.png',
-      '/images/products/tshirt-3.png',
-    ]
-  },
-  {
-    id: 'cap-1',
-    name: 'Paradox - Spy themed Unisex Cap',
-    price: 399,
-    salePrice: 249,
-    salePercentage: 35,
-    image: '/images/products/cap-1.jpg',
-    description: 'Complete your spy look with our premium adjustable cap. Features our subtle Paradox branding and comfortable fit.',
-    sizes: ['One Size'],
-    gallery: [
-      '/images/products/cap-1.jpg',
-      '/images/products/cap-2.jpg',
-      '/images/products/cap-3.jpg',
-    ]
-  },
-  {
-    id: 'polo-1',
-    name: 'Paradox - Spy themed Unisex Polo',
-    price: 799,
-    salePrice: 549,
-    salePercentage: 35,
-    image: '/images/products/polo-1.jpg',
-    description: 'Elevate your style with our spy-themed polo shirt. Made from premium cotton pique fabric with our signature Paradox detailing.',
-    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
-    gallery: [
-      '/images/products/polo-1.jpg',
-      '/images/products/polo-2.jpg',
-      '/images/products/polo-3.jpg',
-    ]
-  },
-];
+
+const GET_ALL_PRODUCTS = gql`
+  query GetAllProducts {
+    ProductQuery {
+      edges {
+        node {
+          id
+        }
+      }
+    }
+  }
+`;
+
+const GET_PRODUCT_BY_ID = gql`
+  query GetProductById {
+    ProductQuery {
+      edges {
+        node {
+          id
+          code
+          name
+          price
+          category
+          shortDescription
+          longDescription
+          variants {
+            variant
+            id
+            quantity
+          }
+          images {
+            imageURL
+          }
+        }
+      }
+    }
+  }
+`;
 
 const ProductPage: NextPage<ProductPageProps> = ({ product }) => {
   const [selectedSize, setSelectedSize] = useState<string>('');
-  const [selectedImage, setSelectedImage] = useState(product.gallery[0]);
+  const [selectedImage, setSelectedImage] = useState(product.images?.[0]?.imageURL || '');
   const router = useRouter();
   const { addToCart } = useCart();
 
@@ -101,16 +73,24 @@ const ProductPage: NextPage<ProductPageProps> = ({ product }) => {
       return;
     }
 
+    // Find the selected variant to get its ID
+    const selectedVariant = product.variants.find(v => v.variant === selectedSize);
+    
+    if (!selectedVariant) {
+      toast.error('Selected size is not available');
+      return;
+    }
+
     addToCart({
       id: product.id,
       name: product.name,
       price: product.price,
-      salePrice: product.salePrice,
-      image: product.image,
+      salePrice: product.price * 1.2,
+      image: product.images?.[0]?.imageURL ? (product.images[0].imageURL.startsWith('http') ? product.images[0].imageURL : `${process.env.NEXT_PUBLIC_BACKEND_URL}/${product.images[0].imageURL.replace(/^\/+/, '')}`) : '',
       size: selectedSize,
       quantity: 1,
       type: 'product'
-    });
+    }, selectedVariant.id);
 
     toast.success('Added to cart!');
     router.push('/cart');
@@ -140,36 +120,36 @@ const ProductPage: NextPage<ProductPageProps> = ({ product }) => {
               {/* Mobile Preview - Shown only on mobile */}
               <div className="block lg:hidden relative aspect-square w-full overflow-hidden rounded-2xl bg-gradient-to-b from-[#1A1A1A] to-[#121212]">
                 <Image
-                  src={selectedImage}
+                  src={selectedImage.startsWith('http') ? selectedImage : `${process.env.NEXT_PUBLIC_BACKEND_URL}/${selectedImage.replace(/^\/+/, '')}`}
                   alt={product.name}
                   fill
-                  className="object-contain p-4"
+                  className="object-cover"
                   priority
                 />
               </div>
 
               {/* Mobile Gallery - Shown only on mobile */}
               <div className="grid grid-cols-3 gap-3 lg:hidden">
-                {product.gallery.map((img, index) => (
+                {product.images?.map((img, index) => (
                   <button
                     key={index}
-                    onClick={() => setSelectedImage(img)}
+                    onClick={() => setSelectedImage(img.imageURL.startsWith('http') ? img.imageURL : `${process.env.NEXT_PUBLIC_BACKEND_URL}/${img.imageURL.replace(/^\/+/, '')}`)}
                     className={`relative aspect-square overflow-hidden rounded-xl bg-[#1A1A1A] ${
-                      selectedImage === img ? 'ring-2 ring-[#F0CC0E]' : ''
+                      selectedImage === img.imageURL ? 'ring-2 ring-[#F0CC0E]' : ''
                     }`}
                   >
                     <Image
-                      src={img}
+                      src={img.imageURL.startsWith('http') ? img.imageURL : `${process.env.NEXT_PUBLIC_BACKEND_URL}/${img.imageURL.replace(/^\/+/, '')}`}
                       alt={`${product.name} view ${index + 1}`}
                       fill
-                      className="object-cover "
+                      className="object-cover object-top"
                     />
                   </button>
                 ))}
               </div>
 
               {/* Desktop Gallery - Hidden on mobile */}
-              <div className="hidden lg:flex gap-4 overflow-x-hidden pb-4 scrollbar-hide p-4">
+              {/* <div className="hidden lg:flex gap-4 overflow-x-hidden pb-4 scrollbar-hide p-4">
                 {product.gallery.map((img, index) => (
                   <button
                     key={index}
@@ -182,20 +162,24 @@ const ProductPage: NextPage<ProductPageProps> = ({ product }) => {
                       src={img}
                       alt={`${product.name} view ${index + 1}`}
                       fill
-                      className="object-cover"
+                      className="object-cover object-top"
                     />
                   </button>
                 ))}
-              </div>
-
+              </div> */}
+      <Gallery
+        product={product}
+        selectedImage={selectedImage}
+        setSelectedImage={setSelectedImage}
+      />
               {/* Product Info */}
               <div className="space-y-6">
                 {/* Price Tag */}
                 <div className="inline-flex items-center gap-2 rounded-full bg-[#1A1A1A]/60 px-4 py-2">
-                  {product.salePrice ? (
+                  {product.price ? (
                     <>
-                      <span className="text-xl font-semibold text-[#F0CC0E]">Rs {product.salePrice}</span>
-                      <span className="text-sm text-gray-400 line-through">Rs {product.price}</span>
+                      <span className="text-xl font-semibold text-[#F0CC0E]">₹ {product.price }</span>
+                      <span className="text-sm text-gray-400 line-through">₹ {product.price * 1.2}</span>
                       <span className="text-xs font-medium text-[#F12F2F] bg-[#1A1A1A] px-2 py-1 rounded-full">
                         early bird price
                       </span>
@@ -208,7 +192,7 @@ const ProductPage: NextPage<ProductPageProps> = ({ product }) => {
                 {/* Product Name and Description */}
                 <div>
                   <h1 className="text-2xl font-bold text-white mb-2">{product.name}</h1>
-                  <p className="text-gray-400">{product.description}</p>
+                  <p className="text-gray-400">{product.shortDescription}</p>
                 </div>
 
                 {/* Size Selection */}
@@ -217,17 +201,17 @@ const ProductPage: NextPage<ProductPageProps> = ({ product }) => {
                     <div className="flex flex-start justify-center align-center items-center gap-5">
                       <h3 className="text-sm font-medium text-white">sizes</h3>
                       <div className="flex gap-3">
-                        {product.sizes.map((size) => (
+                        {product.variants.map((size) => (
                           <button
-                            key={size}
-                            onClick={() => setSelectedSize(size)}
+                            key={size.variant}
+                            onClick={() => setSelectedSize(size.variant)}
                             className={`h-10 sm:h-12 w-10 sm:w-12 rounded-full border ${
-                              selectedSize === size
+                              selectedSize === size.variant
                                 ? 'border-[#F0CC0E] bg-[#F0CC0E] text-black'
                                 : 'border-[#2A2A2A] bg-[#1A1A1A] text-white hover:border-[#F0CC0E]'
                             } text-sm font-medium transition-colors`}
                           >
-                            {size}
+                            {size.variant}
                           </button>
                         ))}
                       </div>
@@ -252,10 +236,10 @@ const ProductPage: NextPage<ProductPageProps> = ({ product }) => {
             <div className="hidden lg:block w-[85%] aspect-[1/1] ml-12">
               <div className="relative h-full w-full overflow-hidden rounded-2xl bg-gradient-to-b from-[#1A1A1A] to-[#121212]">
                 <Image
-                  src={selectedImage}
+                  src={selectedImage ? (selectedImage.startsWith('http') ? selectedImage : `${process.env.NEXT_PUBLIC_BACKEND_URL}/${selectedImage.replace(/^\/+/, '')}`) : '/placeholder.png'}
                   alt={product.name}
                   fill
-                  className="object-cover object-top "
+                  className="object-cover object-top"
                   priority
                 />
               </div>
@@ -268,24 +252,43 @@ const ProductPage: NextPage<ProductPageProps> = ({ product }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const paths = products.map((product) => ({
-    params: { id: product.id },
-  }));
+  const { data } = await client.query({ query: GET_ALL_PRODUCTS });
+
+  const paths =
+    data?.ProductQuery?.edges?.map((edge: any) => ({
+      params: { id: edge.node.id },
+    })) ?? [];
 
   return {
     paths,
-    fallback: false,
+    fallback: 'blocking', // ← ✅ IMPORTANT CHANGE
   };
 };
 
 export const getStaticProps: GetStaticProps<ProductPageProps> = async ({ params }) => {
-  const product = products.find((p) => p.id === params?.id);
+  const { data } = await client.query({ query: GET_PRODUCT_BY_ID });
 
-  if (!product) {
-    return {
-      notFound: true,
-    };
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL ?? 'http://localhost:8082';
+
+  const node = data?.ProductQuery?.edges.find((edge: any) => edge.node.id === params?.id)?.node;
+
+  if (!node) {
+    return { notFound: true };
   }
+
+  const imageUrl = node.images?.[0]?.imageURL
+    ? node.images[0].imageURL.startsWith('http')
+      ? node.images[0].imageURL
+      : `${backendUrl}/${node.images[0].imageURL.replace(/^\/+/, '')}`
+    : '/images/placeholder.png';
+
+  const gallery = node.images?.map((img: any) =>
+    img.imageURL.startsWith('http')
+      ? img.imageURL
+      : `${backendUrl}/${img.imageURL.replace(/^\/+/, '')}`
+  ) ?? [];
+
+  const product: Product = node;
 
   return {
     props: {
