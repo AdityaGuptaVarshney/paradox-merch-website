@@ -25,13 +25,16 @@ export type CartProduct = Node & {
   createdAt: Scalars['Time']['output'];
   id: Scalars['ID']['output'];
   product: Product;
+  productCode: Scalars['String']['output'];
   productID: Scalars['ID']['output'];
   quantity: Scalars['Int']['output'];
   toDeliver: Scalars['Boolean']['output'];
   updatedAt: Scalars['Time']['output'];
   user: Member;
   userID: Scalars['ID']['output'];
-  variant: Scalars['String']['output'];
+  variant: ProductVariants;
+  variantID: Scalars['ID']['output'];
+  variantName: Scalars['String']['output'];
 };
 
 /** A connection to a list of items. */
@@ -56,12 +59,14 @@ export type CartProductEdge = {
 
 export enum CartProductField {
   CreatedAt = 'createdAt',
+  ProductCode = 'productCode',
   ProductId = 'productID',
   Quantity = 'quantity',
   ToDeliver = 'toDeliver',
   UpdatedAt = 'updatedAt',
   UserId = 'userID',
-  Variant = 'variant'
+  VariantId = 'variantID',
+  VariantName = 'variantName'
 }
 
 /** Ordering options for CartProduct connections */
@@ -100,6 +105,9 @@ export type CartProductWhereInput = {
   /** user edge predicates */
   hasUser: InputMaybe<Scalars['Boolean']['input']>;
   hasUserWith: InputMaybe<Array<MemberWhereInput>>;
+  /** variant edge predicates */
+  hasVariant: InputMaybe<Scalars['Boolean']['input']>;
+  hasVariantWith: InputMaybe<Array<ProductVariantsWhereInput>>;
   /** id field predicates */
   id: InputMaybe<Scalars['ID']['input']>;
   idGT: InputMaybe<Scalars['ID']['input']>;
@@ -111,6 +119,20 @@ export type CartProductWhereInput = {
   idNotIn: InputMaybe<Array<Scalars['ID']['input']>>;
   not: InputMaybe<CartProductWhereInput>;
   or: InputMaybe<Array<CartProductWhereInput>>;
+  /** product_code field predicates */
+  productCode: InputMaybe<Scalars['String']['input']>;
+  productCodeContains: InputMaybe<Scalars['String']['input']>;
+  productCodeContainsFold: InputMaybe<Scalars['String']['input']>;
+  productCodeEqualFold: InputMaybe<Scalars['String']['input']>;
+  productCodeGT: InputMaybe<Scalars['String']['input']>;
+  productCodeGTE: InputMaybe<Scalars['String']['input']>;
+  productCodeHasPrefix: InputMaybe<Scalars['String']['input']>;
+  productCodeHasSuffix: InputMaybe<Scalars['String']['input']>;
+  productCodeIn: InputMaybe<Array<Scalars['String']['input']>>;
+  productCodeLT: InputMaybe<Scalars['String']['input']>;
+  productCodeLTE: InputMaybe<Scalars['String']['input']>;
+  productCodeNEQ: InputMaybe<Scalars['String']['input']>;
+  productCodeNotIn: InputMaybe<Array<Scalars['String']['input']>>;
   /** product_id field predicates */
   productID: InputMaybe<Scalars['ID']['input']>;
   productIDIn: InputMaybe<Array<Scalars['ID']['input']>>;
@@ -142,163 +164,25 @@ export type CartProductWhereInput = {
   userIDIn: InputMaybe<Array<Scalars['ID']['input']>>;
   userIDNEQ: InputMaybe<Scalars['ID']['input']>;
   userIDNotIn: InputMaybe<Array<Scalars['ID']['input']>>;
-  /** variant field predicates */
-  variant: InputMaybe<Scalars['String']['input']>;
-  variantContains: InputMaybe<Scalars['String']['input']>;
-  variantContainsFold: InputMaybe<Scalars['String']['input']>;
-  variantEqualFold: InputMaybe<Scalars['String']['input']>;
-  variantGT: InputMaybe<Scalars['String']['input']>;
-  variantGTE: InputMaybe<Scalars['String']['input']>;
-  variantHasPrefix: InputMaybe<Scalars['String']['input']>;
-  variantHasSuffix: InputMaybe<Scalars['String']['input']>;
-  variantIn: InputMaybe<Array<Scalars['String']['input']>>;
-  variantLT: InputMaybe<Scalars['String']['input']>;
-  variantLTE: InputMaybe<Scalars['String']['input']>;
-  variantNEQ: InputMaybe<Scalars['String']['input']>;
-  variantNotIn: InputMaybe<Array<Scalars['String']['input']>>;
-};
-
-export type Coupon = Node & {
-  __typename?: 'Coupon';
-  couponCode: Scalars['String']['output'];
-  createdAt: Scalars['Time']['output'];
-  discountPercentage: Scalars['Int']['output'];
-  email: Scalars['String']['output'];
-  id: Scalars['ID']['output'];
-  redeemed: Scalars['Boolean']['output'];
-  redeemedOn: Scalars['Time']['output'];
-  updatedAt: Scalars['Time']['output'];
-};
-
-/** A connection to a list of items. */
-export type CouponConnection = {
-  __typename?: 'CouponConnection';
-  /** A list of edges. */
-  edges: Maybe<Array<Maybe<CouponEdge>>>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** Identifies the total count of items in the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** An edge in a connection. */
-export type CouponEdge = {
-  __typename?: 'CouponEdge';
-  /** A cursor for use in pagination. */
-  cursor: Scalars['Cursor']['output'];
-  /** The item at the end of the edge. */
-  node: Maybe<Coupon>;
-};
-
-export enum CouponField {
-  CouponCode = 'couponCode',
-  CreatedAt = 'createdAt',
-  DiscountPercentage = 'discountPercentage',
-  Email = 'email',
-  Redeemed = 'redeemed',
-  RedeemedOn = 'redeemedOn',
-  UpdatedAt = 'updatedAt'
-}
-
-/** Ordering options for Coupon connections */
-export type CouponOrder = {
-  /** The ordering direction. */
-  direction: OrderDirection;
-  /** The field by which to order Coupons. */
-  field: CouponOrderField;
-};
-
-/** Properties by which Coupon connections can be ordered. */
-export enum CouponOrderField {
-  CreatedAt = 'createdAt',
-  Id = 'id',
-  UpdatedAt = 'updatedAt'
-}
-
-/**
- * CouponWhereInput is used for filtering Coupon objects.
- * Input was generated by ent.
- */
-export type CouponWhereInput = {
-  and: InputMaybe<Array<CouponWhereInput>>;
-  /** coupon_code field predicates */
-  couponCode: InputMaybe<Scalars['String']['input']>;
-  couponCodeContains: InputMaybe<Scalars['String']['input']>;
-  couponCodeContainsFold: InputMaybe<Scalars['String']['input']>;
-  couponCodeEqualFold: InputMaybe<Scalars['String']['input']>;
-  couponCodeGT: InputMaybe<Scalars['String']['input']>;
-  couponCodeGTE: InputMaybe<Scalars['String']['input']>;
-  couponCodeHasPrefix: InputMaybe<Scalars['String']['input']>;
-  couponCodeHasSuffix: InputMaybe<Scalars['String']['input']>;
-  couponCodeIn: InputMaybe<Array<Scalars['String']['input']>>;
-  couponCodeLT: InputMaybe<Scalars['String']['input']>;
-  couponCodeLTE: InputMaybe<Scalars['String']['input']>;
-  couponCodeNEQ: InputMaybe<Scalars['String']['input']>;
-  couponCodeNotIn: InputMaybe<Array<Scalars['String']['input']>>;
-  /** created_at field predicates */
-  createdAt: InputMaybe<Scalars['Time']['input']>;
-  createdAtGT: InputMaybe<Scalars['Time']['input']>;
-  createdAtGTE: InputMaybe<Scalars['Time']['input']>;
-  createdAtIn: InputMaybe<Array<Scalars['Time']['input']>>;
-  createdAtLT: InputMaybe<Scalars['Time']['input']>;
-  createdAtLTE: InputMaybe<Scalars['Time']['input']>;
-  createdAtNEQ: InputMaybe<Scalars['Time']['input']>;
-  createdAtNotIn: InputMaybe<Array<Scalars['Time']['input']>>;
-  /** discount_percentage field predicates */
-  discountPercentage: InputMaybe<Scalars['Int']['input']>;
-  discountPercentageGT: InputMaybe<Scalars['Int']['input']>;
-  discountPercentageGTE: InputMaybe<Scalars['Int']['input']>;
-  discountPercentageIn: InputMaybe<Array<Scalars['Int']['input']>>;
-  discountPercentageLT: InputMaybe<Scalars['Int']['input']>;
-  discountPercentageLTE: InputMaybe<Scalars['Int']['input']>;
-  discountPercentageNEQ: InputMaybe<Scalars['Int']['input']>;
-  discountPercentageNotIn: InputMaybe<Array<Scalars['Int']['input']>>;
-  /** email field predicates */
-  email: InputMaybe<Scalars['String']['input']>;
-  emailContains: InputMaybe<Scalars['String']['input']>;
-  emailContainsFold: InputMaybe<Scalars['String']['input']>;
-  emailEqualFold: InputMaybe<Scalars['String']['input']>;
-  emailGT: InputMaybe<Scalars['String']['input']>;
-  emailGTE: InputMaybe<Scalars['String']['input']>;
-  emailHasPrefix: InputMaybe<Scalars['String']['input']>;
-  emailHasSuffix: InputMaybe<Scalars['String']['input']>;
-  emailIn: InputMaybe<Array<Scalars['String']['input']>>;
-  emailLT: InputMaybe<Scalars['String']['input']>;
-  emailLTE: InputMaybe<Scalars['String']['input']>;
-  emailNEQ: InputMaybe<Scalars['String']['input']>;
-  emailNotIn: InputMaybe<Array<Scalars['String']['input']>>;
-  /** id field predicates */
-  id: InputMaybe<Scalars['ID']['input']>;
-  idGT: InputMaybe<Scalars['ID']['input']>;
-  idGTE: InputMaybe<Scalars['ID']['input']>;
-  idIn: InputMaybe<Array<Scalars['ID']['input']>>;
-  idLT: InputMaybe<Scalars['ID']['input']>;
-  idLTE: InputMaybe<Scalars['ID']['input']>;
-  idNEQ: InputMaybe<Scalars['ID']['input']>;
-  idNotIn: InputMaybe<Array<Scalars['ID']['input']>>;
-  not: InputMaybe<CouponWhereInput>;
-  or: InputMaybe<Array<CouponWhereInput>>;
-  /** redeemed field predicates */
-  redeemed: InputMaybe<Scalars['Boolean']['input']>;
-  redeemedNEQ: InputMaybe<Scalars['Boolean']['input']>;
-  /** redeemed_on field predicates */
-  redeemedOn: InputMaybe<Scalars['Time']['input']>;
-  redeemedOnGT: InputMaybe<Scalars['Time']['input']>;
-  redeemedOnGTE: InputMaybe<Scalars['Time']['input']>;
-  redeemedOnIn: InputMaybe<Array<Scalars['Time']['input']>>;
-  redeemedOnLT: InputMaybe<Scalars['Time']['input']>;
-  redeemedOnLTE: InputMaybe<Scalars['Time']['input']>;
-  redeemedOnNEQ: InputMaybe<Scalars['Time']['input']>;
-  redeemedOnNotIn: InputMaybe<Array<Scalars['Time']['input']>>;
-  /** updated_at field predicates */
-  updatedAt: InputMaybe<Scalars['Time']['input']>;
-  updatedAtGT: InputMaybe<Scalars['Time']['input']>;
-  updatedAtGTE: InputMaybe<Scalars['Time']['input']>;
-  updatedAtIn: InputMaybe<Array<Scalars['Time']['input']>>;
-  updatedAtLT: InputMaybe<Scalars['Time']['input']>;
-  updatedAtLTE: InputMaybe<Scalars['Time']['input']>;
-  updatedAtNEQ: InputMaybe<Scalars['Time']['input']>;
-  updatedAtNotIn: InputMaybe<Array<Scalars['Time']['input']>>;
+  /** variant_id field predicates */
+  variantID: InputMaybe<Scalars['ID']['input']>;
+  variantIDIn: InputMaybe<Array<Scalars['ID']['input']>>;
+  variantIDNEQ: InputMaybe<Scalars['ID']['input']>;
+  variantIDNotIn: InputMaybe<Array<Scalars['ID']['input']>>;
+  /** variant_name field predicates */
+  variantName: InputMaybe<Scalars['String']['input']>;
+  variantNameContains: InputMaybe<Scalars['String']['input']>;
+  variantNameContainsFold: InputMaybe<Scalars['String']['input']>;
+  variantNameEqualFold: InputMaybe<Scalars['String']['input']>;
+  variantNameGT: InputMaybe<Scalars['String']['input']>;
+  variantNameGTE: InputMaybe<Scalars['String']['input']>;
+  variantNameHasPrefix: InputMaybe<Scalars['String']['input']>;
+  variantNameHasSuffix: InputMaybe<Scalars['String']['input']>;
+  variantNameIn: InputMaybe<Array<Scalars['String']['input']>>;
+  variantNameLT: InputMaybe<Scalars['String']['input']>;
+  variantNameLTE: InputMaybe<Scalars['String']['input']>;
+  variantNameNEQ: InputMaybe<Scalars['String']['input']>;
+  variantNameNotIn: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 /**
@@ -307,26 +191,14 @@ export type CouponWhereInput = {
  */
 export type CreateCartProductInput = {
   createdAt: InputMaybe<Scalars['Time']['input']>;
+  productCode: Scalars['String']['input'];
   productID: Scalars['ID']['input'];
   quantity: Scalars['Int']['input'];
   toDeliver: InputMaybe<Scalars['Boolean']['input']>;
   updatedAt: InputMaybe<Scalars['Time']['input']>;
   userID: Scalars['ID']['input'];
-  variant: Scalars['String']['input'];
-};
-
-/**
- * CreateCouponInput is used for create Coupon object.
- * Input was generated by ent.
- */
-export type CreateCouponInput = {
-  couponCode: InputMaybe<Scalars['String']['input']>;
-  createdAt: InputMaybe<Scalars['Time']['input']>;
-  discountPercentage: InputMaybe<Scalars['Int']['input']>;
-  email: Scalars['String']['input'];
-  redeemed: InputMaybe<Scalars['Boolean']['input']>;
-  redeemedOn: Scalars['Time']['input'];
-  updatedAt: InputMaybe<Scalars['Time']['input']>;
+  variantID: Scalars['ID']['input'];
+  variantName: Scalars['String']['input'];
 };
 
 /**
@@ -334,7 +206,6 @@ export type CreateCouponInput = {
  * Input was generated by ent.
  */
 export type CreateMemberInput = {
-  alternatePhoneNumber: InputMaybe<Scalars['String']['input']>;
   city: InputMaybe<Scalars['String']['input']>;
   createdAt: InputMaybe<Scalars['Time']['input']>;
   deptName: InputMaybe<Scalars['String']['input']>;
@@ -351,6 +222,7 @@ export type CreateMemberInput = {
   place: InputMaybe<Scalars['String']['input']>;
   profilePicURL: InputMaybe<Scalars['String']['input']>;
   role: InputMaybe<MemberRole>;
+  state: InputMaybe<Scalars['String']['input']>;
   street: InputMaybe<Scalars['String']['input']>;
   updatedAt: InputMaybe<Scalars['Time']['input']>;
 };
@@ -361,17 +233,25 @@ export type CreateMemberInput = {
  */
 export type CreateOrderInput = {
   alternatePhoneNumber: InputMaybe<Scalars['String']['input']>;
+  amount: Scalars['Int']['input'];
   city: InputMaybe<Scalars['String']['input']>;
   createdAt: InputMaybe<Scalars['Time']['input']>;
   email: Scalars['String']['input'];
   houseNo: InputMaybe<Scalars['String']['input']>;
   landmark: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
   orderDate: InputMaybe<Scalars['Time']['input']>;
   orderedProductIDs: InputMaybe<Array<Scalars['ID']['input']>>;
-  paidAmount: Scalars['Float']['input'];
-  phoneNumber: InputMaybe<Scalars['String']['input']>;
+  paymentReferenceID: Scalars['String']['input'];
+  paymentRequestJSON: Scalars['JSON']['input'];
+  paymentStatus: InputMaybe<OrderPaymentStatus>;
+  paymentStatusResponse: InputMaybe<Scalars['JSON']['input']>;
+  phoneNumber: Scalars['String']['input'];
   pincode: InputMaybe<Scalars['String']['input']>;
   place: InputMaybe<Scalars['String']['input']>;
+  razorpayPaymentID: Scalars['String']['input'];
+  razorpayPaymentLink: Scalars['String']['input'];
+  state: InputMaybe<Scalars['String']['input']>;
   street: InputMaybe<Scalars['String']['input']>;
   updatedAt: InputMaybe<Scalars['Time']['input']>;
   userID: Scalars['ID']['input'];
@@ -410,17 +290,18 @@ export type CreateProductImagesInput = {
  */
 export type CreateProductInput = {
   category: ProductCategory;
+  code: Scalars['String']['input'];
   createdAt: InputMaybe<Scalars['Time']['input']>;
-  description: InputMaybe<Scalars['String']['input']>;
   imageIDs: InputMaybe<Array<Scalars['ID']['input']>>;
   inCartProductIDs: InputMaybe<Array<Scalars['ID']['input']>>;
   isDeliverable: InputMaybe<Scalars['Boolean']['input']>;
+  longDescription: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
   orderedProductIDs: InputMaybe<Array<Scalars['ID']['input']>>;
-  price: Scalars['String']['input'];
+  price: Scalars['Int']['input'];
+  shortDescription: InputMaybe<Scalars['String']['input']>;
   updatedAt: InputMaybe<Scalars['Time']['input']>;
   variantIDs: InputMaybe<Array<Scalars['ID']['input']>>;
-  weight: Scalars['Int']['input'];
 };
 
 /**
@@ -429,6 +310,7 @@ export type CreateProductInput = {
  */
 export type CreateProductVariantsInput = {
   createdAt: InputMaybe<Scalars['Time']['input']>;
+  inCartProductIDs: InputMaybe<Array<Scalars['ID']['input']>>;
   productID: Scalars['ID']['input'];
   quantity: Scalars['Int']['input'];
   updatedAt: InputMaybe<Scalars['Time']['input']>;
@@ -443,7 +325,6 @@ export type LoginResponse = {
 
 export type Member = Node & {
   __typename?: 'Member';
-  alternatePhoneNumber: Maybe<Scalars['String']['output']>;
   city: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['Time']['output'];
   deptName: Maybe<Scalars['String']['output']>;
@@ -461,6 +342,7 @@ export type Member = Node & {
   place: Maybe<Scalars['String']['output']>;
   profilePicURL: Maybe<Scalars['String']['output']>;
   role: MemberRole;
+  state: Maybe<Scalars['String']['output']>;
   street: Maybe<Scalars['String']['output']>;
   updatedAt: Scalars['Time']['output'];
 };
@@ -486,7 +368,6 @@ export type MemberEdge = {
 };
 
 export enum MemberField {
-  AlternatePhoneNumber = 'alternatePhoneNumber',
   City = 'city',
   CreatedAt = 'createdAt',
   DeptName = 'deptName',
@@ -500,6 +381,7 @@ export enum MemberField {
   Place = 'place',
   ProfilePicUrl = 'profilePicURL',
   Role = 'role',
+  State = 'state',
   Street = 'street',
   UpdatedAt = 'updatedAt'
 }
@@ -532,22 +414,6 @@ export enum MemberRole {
  * Input was generated by ent.
  */
 export type MemberWhereInput = {
-  /** alternate_phone_number field predicates */
-  alternatePhoneNumber: InputMaybe<Scalars['String']['input']>;
-  alternatePhoneNumberContains: InputMaybe<Scalars['String']['input']>;
-  alternatePhoneNumberContainsFold: InputMaybe<Scalars['String']['input']>;
-  alternatePhoneNumberEqualFold: InputMaybe<Scalars['String']['input']>;
-  alternatePhoneNumberGT: InputMaybe<Scalars['String']['input']>;
-  alternatePhoneNumberGTE: InputMaybe<Scalars['String']['input']>;
-  alternatePhoneNumberHasPrefix: InputMaybe<Scalars['String']['input']>;
-  alternatePhoneNumberHasSuffix: InputMaybe<Scalars['String']['input']>;
-  alternatePhoneNumberIn: InputMaybe<Array<Scalars['String']['input']>>;
-  alternatePhoneNumberIsNil: InputMaybe<Scalars['Boolean']['input']>;
-  alternatePhoneNumberLT: InputMaybe<Scalars['String']['input']>;
-  alternatePhoneNumberLTE: InputMaybe<Scalars['String']['input']>;
-  alternatePhoneNumberNEQ: InputMaybe<Scalars['String']['input']>;
-  alternatePhoneNumberNotIn: InputMaybe<Array<Scalars['String']['input']>>;
-  alternatePhoneNumberNotNil: InputMaybe<Scalars['Boolean']['input']>;
   and: InputMaybe<Array<MemberWhereInput>>;
   /** city field predicates */
   city: InputMaybe<Scalars['String']['input']>;
@@ -755,6 +621,22 @@ export type MemberWhereInput = {
   roleIn: InputMaybe<Array<MemberRole>>;
   roleNEQ: InputMaybe<MemberRole>;
   roleNotIn: InputMaybe<Array<MemberRole>>;
+  /** state field predicates */
+  state: InputMaybe<Scalars['String']['input']>;
+  stateContains: InputMaybe<Scalars['String']['input']>;
+  stateContainsFold: InputMaybe<Scalars['String']['input']>;
+  stateEqualFold: InputMaybe<Scalars['String']['input']>;
+  stateGT: InputMaybe<Scalars['String']['input']>;
+  stateGTE: InputMaybe<Scalars['String']['input']>;
+  stateHasPrefix: InputMaybe<Scalars['String']['input']>;
+  stateHasSuffix: InputMaybe<Scalars['String']['input']>;
+  stateIn: InputMaybe<Array<Scalars['String']['input']>>;
+  stateIsNil: InputMaybe<Scalars['Boolean']['input']>;
+  stateLT: InputMaybe<Scalars['String']['input']>;
+  stateLTE: InputMaybe<Scalars['String']['input']>;
+  stateNEQ: InputMaybe<Scalars['String']['input']>;
+  stateNotIn: InputMaybe<Array<Scalars['String']['input']>>;
+  stateNotNil: InputMaybe<Scalars['Boolean']['input']>;
   /** street field predicates */
   street: InputMaybe<Scalars['String']['input']>;
   streetContains: InputMaybe<Scalars['String']['input']>;
@@ -788,10 +670,6 @@ export type Mutation = {
   CartProductCreateBulk: Maybe<Array<CartProduct>>;
   CartProductDelete: CartProduct;
   CartProductUpdate: CartProduct;
-  CouponCreate: Coupon;
-  CouponCreateBulk: Maybe<Array<Coupon>>;
-  CouponDelete: Coupon;
-  CouponUpdate: Coupon;
   DeleteFile: Scalars['Boolean']['output'];
   MemberCreate: Member;
   MemberCreateBulk: Maybe<Array<Member>>;
@@ -805,6 +683,7 @@ export type Mutation = {
   OrderedProductCreateBulk: Maybe<Array<OrderedProduct>>;
   OrderedProductDelete: OrderedProduct;
   OrderedProductUpdate: OrderedProduct;
+  PlaceOrder: Maybe<PaymentInfo>;
   ProductCreate: Product;
   ProductCreateBulk: Maybe<Array<Product>>;
   ProductDelete: Product;
@@ -840,27 +719,6 @@ export type MutationCartProductDeleteArgs = {
 export type MutationCartProductUpdateArgs = {
   id: Scalars['ID']['input'];
   input: UpdateCartProductInput;
-};
-
-
-export type MutationCouponCreateArgs = {
-  input: CreateCouponInput;
-};
-
-
-export type MutationCouponCreateBulkArgs = {
-  inputs: Array<InputMaybe<CreateCouponInput>>;
-};
-
-
-export type MutationCouponDeleteArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
-export type MutationCouponUpdateArgs = {
-  id: Scalars['ID']['input'];
-  input: UpdateCouponInput;
 };
 
 
@@ -930,6 +788,11 @@ export type MutationOrderedProductDeleteArgs = {
 export type MutationOrderedProductUpdateArgs = {
   id: Scalars['ID']['input'];
   input: UpdateOrderedProductInput;
+};
+
+
+export type MutationPlaceOrderArgs = {
+  input: PlaceOrderInput;
 };
 
 
@@ -1012,18 +875,26 @@ export type Node = {
 export type Order = Node & {
   __typename?: 'Order';
   alternatePhoneNumber: Maybe<Scalars['String']['output']>;
+  amount: Scalars['Int']['output'];
   city: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['Time']['output'];
   email: Scalars['String']['output'];
   houseNo: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   landmark: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
   orderDate: Scalars['Time']['output'];
   orderedProducts: Maybe<Array<OrderedProduct>>;
-  paidAmount: Scalars['Float']['output'];
-  phoneNumber: Maybe<Scalars['String']['output']>;
+  paymentReferenceID: Scalars['String']['output'];
+  paymentRequestJSON: Scalars['JSON']['output'];
+  paymentStatus: OrderPaymentStatus;
+  paymentStatusResponse: Maybe<Scalars['JSON']['output']>;
+  phoneNumber: Scalars['String']['output'];
   pincode: Maybe<Scalars['String']['output']>;
   place: Maybe<Scalars['String']['output']>;
+  razorpayPaymentID: Scalars['String']['output'];
+  razorpayPaymentLink: Scalars['String']['output'];
+  state: Maybe<Scalars['String']['output']>;
   street: Maybe<Scalars['String']['output']>;
   updatedAt: Scalars['Time']['output'];
   user: Member;
@@ -1060,16 +931,24 @@ export type OrderEdge = {
 
 export enum OrderField {
   AlternatePhoneNumber = 'alternatePhoneNumber',
+  Amount = 'amount',
   City = 'city',
   CreatedAt = 'createdAt',
   Email = 'email',
   HouseNo = 'houseNo',
   Landmark = 'landmark',
+  Name = 'name',
   OrderDate = 'orderDate',
-  PaidAmount = 'paidAmount',
+  PaymentReferenceId = 'paymentReferenceID',
+  PaymentRequestJson = 'paymentRequestJSON',
+  PaymentStatus = 'paymentStatus',
+  PaymentStatusResponse = 'paymentStatusResponse',
   PhoneNumber = 'phoneNumber',
   Pincode = 'pincode',
   Place = 'place',
+  RazorpayPaymentId = 'razorpayPaymentID',
+  RazorpayPaymentLink = 'razorpayPaymentLink',
+  State = 'state',
   Street = 'street',
   UpdatedAt = 'updatedAt',
   UserId = 'userID'
@@ -1088,6 +967,12 @@ export enum OrderOrderField {
   CreatedAt = 'createdAt',
   Id = 'id',
   UpdatedAt = 'updatedAt'
+}
+
+/** OrderPaymentStatus is enum for the field payment_status */
+export enum OrderPaymentStatus {
+  Completed = 'completed',
+  Pending = 'pending'
 }
 
 /**
@@ -1111,6 +996,15 @@ export type OrderWhereInput = {
   alternatePhoneNumberNEQ: InputMaybe<Scalars['String']['input']>;
   alternatePhoneNumberNotIn: InputMaybe<Array<Scalars['String']['input']>>;
   alternatePhoneNumberNotNil: InputMaybe<Scalars['Boolean']['input']>;
+  /** amount field predicates */
+  amount: InputMaybe<Scalars['Int']['input']>;
+  amountGT: InputMaybe<Scalars['Int']['input']>;
+  amountGTE: InputMaybe<Scalars['Int']['input']>;
+  amountIn: InputMaybe<Array<Scalars['Int']['input']>>;
+  amountLT: InputMaybe<Scalars['Int']['input']>;
+  amountLTE: InputMaybe<Scalars['Int']['input']>;
+  amountNEQ: InputMaybe<Scalars['Int']['input']>;
+  amountNotIn: InputMaybe<Array<Scalars['Int']['input']>>;
   and: InputMaybe<Array<OrderWhereInput>>;
   /** city field predicates */
   city: InputMaybe<Scalars['String']['input']>;
@@ -1198,6 +1092,20 @@ export type OrderWhereInput = {
   landmarkNEQ: InputMaybe<Scalars['String']['input']>;
   landmarkNotIn: InputMaybe<Array<Scalars['String']['input']>>;
   landmarkNotNil: InputMaybe<Scalars['Boolean']['input']>;
+  /** name field predicates */
+  name: InputMaybe<Scalars['String']['input']>;
+  nameContains: InputMaybe<Scalars['String']['input']>;
+  nameContainsFold: InputMaybe<Scalars['String']['input']>;
+  nameEqualFold: InputMaybe<Scalars['String']['input']>;
+  nameGT: InputMaybe<Scalars['String']['input']>;
+  nameGTE: InputMaybe<Scalars['String']['input']>;
+  nameHasPrefix: InputMaybe<Scalars['String']['input']>;
+  nameHasSuffix: InputMaybe<Scalars['String']['input']>;
+  nameIn: InputMaybe<Array<Scalars['String']['input']>>;
+  nameLT: InputMaybe<Scalars['String']['input']>;
+  nameLTE: InputMaybe<Scalars['String']['input']>;
+  nameNEQ: InputMaybe<Scalars['String']['input']>;
+  nameNotIn: InputMaybe<Array<Scalars['String']['input']>>;
   not: InputMaybe<OrderWhereInput>;
   or: InputMaybe<Array<OrderWhereInput>>;
   /** order_date field predicates */
@@ -1209,15 +1117,45 @@ export type OrderWhereInput = {
   orderDateLTE: InputMaybe<Scalars['Time']['input']>;
   orderDateNEQ: InputMaybe<Scalars['Time']['input']>;
   orderDateNotIn: InputMaybe<Array<Scalars['Time']['input']>>;
-  /** paid_amount field predicates */
-  paidAmount: InputMaybe<Scalars['Float']['input']>;
-  paidAmountGT: InputMaybe<Scalars['Float']['input']>;
-  paidAmountGTE: InputMaybe<Scalars['Float']['input']>;
-  paidAmountIn: InputMaybe<Array<Scalars['Float']['input']>>;
-  paidAmountLT: InputMaybe<Scalars['Float']['input']>;
-  paidAmountLTE: InputMaybe<Scalars['Float']['input']>;
-  paidAmountNEQ: InputMaybe<Scalars['Float']['input']>;
-  paidAmountNotIn: InputMaybe<Array<Scalars['Float']['input']>>;
+  /** payment_reference_id field predicates */
+  paymentReferenceID: InputMaybe<Scalars['String']['input']>;
+  paymentReferenceIDContains: InputMaybe<Scalars['String']['input']>;
+  paymentReferenceIDContainsFold: InputMaybe<Scalars['String']['input']>;
+  paymentReferenceIDEqualFold: InputMaybe<Scalars['String']['input']>;
+  paymentReferenceIDGT: InputMaybe<Scalars['String']['input']>;
+  paymentReferenceIDGTE: InputMaybe<Scalars['String']['input']>;
+  paymentReferenceIDHasPrefix: InputMaybe<Scalars['String']['input']>;
+  paymentReferenceIDHasSuffix: InputMaybe<Scalars['String']['input']>;
+  paymentReferenceIDIn: InputMaybe<Array<Scalars['String']['input']>>;
+  paymentReferenceIDLT: InputMaybe<Scalars['String']['input']>;
+  paymentReferenceIDLTE: InputMaybe<Scalars['String']['input']>;
+  paymentReferenceIDNEQ: InputMaybe<Scalars['String']['input']>;
+  paymentReferenceIDNotIn: InputMaybe<Array<Scalars['String']['input']>>;
+  /** payment_request_json field predicates */
+  paymentRequestJSON: InputMaybe<Scalars['JSON']['input']>;
+  paymentRequestJSONGT: InputMaybe<Scalars['JSON']['input']>;
+  paymentRequestJSONGTE: InputMaybe<Scalars['JSON']['input']>;
+  paymentRequestJSONIn: InputMaybe<Array<Scalars['JSON']['input']>>;
+  paymentRequestJSONLT: InputMaybe<Scalars['JSON']['input']>;
+  paymentRequestJSONLTE: InputMaybe<Scalars['JSON']['input']>;
+  paymentRequestJSONNEQ: InputMaybe<Scalars['JSON']['input']>;
+  paymentRequestJSONNotIn: InputMaybe<Array<Scalars['JSON']['input']>>;
+  /** payment_status field predicates */
+  paymentStatus: InputMaybe<OrderPaymentStatus>;
+  paymentStatusIn: InputMaybe<Array<OrderPaymentStatus>>;
+  paymentStatusNEQ: InputMaybe<OrderPaymentStatus>;
+  paymentStatusNotIn: InputMaybe<Array<OrderPaymentStatus>>;
+  /** payment_status_response field predicates */
+  paymentStatusResponse: InputMaybe<Scalars['JSON']['input']>;
+  paymentStatusResponseGT: InputMaybe<Scalars['JSON']['input']>;
+  paymentStatusResponseGTE: InputMaybe<Scalars['JSON']['input']>;
+  paymentStatusResponseIn: InputMaybe<Array<Scalars['JSON']['input']>>;
+  paymentStatusResponseIsNil: InputMaybe<Scalars['Boolean']['input']>;
+  paymentStatusResponseLT: InputMaybe<Scalars['JSON']['input']>;
+  paymentStatusResponseLTE: InputMaybe<Scalars['JSON']['input']>;
+  paymentStatusResponseNEQ: InputMaybe<Scalars['JSON']['input']>;
+  paymentStatusResponseNotIn: InputMaybe<Array<Scalars['JSON']['input']>>;
+  paymentStatusResponseNotNil: InputMaybe<Scalars['Boolean']['input']>;
   /** phone_number field predicates */
   phoneNumber: InputMaybe<Scalars['String']['input']>;
   phoneNumberContains: InputMaybe<Scalars['String']['input']>;
@@ -1228,12 +1166,10 @@ export type OrderWhereInput = {
   phoneNumberHasPrefix: InputMaybe<Scalars['String']['input']>;
   phoneNumberHasSuffix: InputMaybe<Scalars['String']['input']>;
   phoneNumberIn: InputMaybe<Array<Scalars['String']['input']>>;
-  phoneNumberIsNil: InputMaybe<Scalars['Boolean']['input']>;
   phoneNumberLT: InputMaybe<Scalars['String']['input']>;
   phoneNumberLTE: InputMaybe<Scalars['String']['input']>;
   phoneNumberNEQ: InputMaybe<Scalars['String']['input']>;
   phoneNumberNotIn: InputMaybe<Array<Scalars['String']['input']>>;
-  phoneNumberNotNil: InputMaybe<Scalars['Boolean']['input']>;
   /** pincode field predicates */
   pincode: InputMaybe<Scalars['String']['input']>;
   pincodeContains: InputMaybe<Scalars['String']['input']>;
@@ -1266,6 +1202,50 @@ export type OrderWhereInput = {
   placeNEQ: InputMaybe<Scalars['String']['input']>;
   placeNotIn: InputMaybe<Array<Scalars['String']['input']>>;
   placeNotNil: InputMaybe<Scalars['Boolean']['input']>;
+  /** razorpay_payment_id field predicates */
+  razorpayPaymentID: InputMaybe<Scalars['String']['input']>;
+  razorpayPaymentIDContains: InputMaybe<Scalars['String']['input']>;
+  razorpayPaymentIDContainsFold: InputMaybe<Scalars['String']['input']>;
+  razorpayPaymentIDEqualFold: InputMaybe<Scalars['String']['input']>;
+  razorpayPaymentIDGT: InputMaybe<Scalars['String']['input']>;
+  razorpayPaymentIDGTE: InputMaybe<Scalars['String']['input']>;
+  razorpayPaymentIDHasPrefix: InputMaybe<Scalars['String']['input']>;
+  razorpayPaymentIDHasSuffix: InputMaybe<Scalars['String']['input']>;
+  razorpayPaymentIDIn: InputMaybe<Array<Scalars['String']['input']>>;
+  razorpayPaymentIDLT: InputMaybe<Scalars['String']['input']>;
+  razorpayPaymentIDLTE: InputMaybe<Scalars['String']['input']>;
+  razorpayPaymentIDNEQ: InputMaybe<Scalars['String']['input']>;
+  razorpayPaymentIDNotIn: InputMaybe<Array<Scalars['String']['input']>>;
+  /** razorpay_payment_link field predicates */
+  razorpayPaymentLink: InputMaybe<Scalars['String']['input']>;
+  razorpayPaymentLinkContains: InputMaybe<Scalars['String']['input']>;
+  razorpayPaymentLinkContainsFold: InputMaybe<Scalars['String']['input']>;
+  razorpayPaymentLinkEqualFold: InputMaybe<Scalars['String']['input']>;
+  razorpayPaymentLinkGT: InputMaybe<Scalars['String']['input']>;
+  razorpayPaymentLinkGTE: InputMaybe<Scalars['String']['input']>;
+  razorpayPaymentLinkHasPrefix: InputMaybe<Scalars['String']['input']>;
+  razorpayPaymentLinkHasSuffix: InputMaybe<Scalars['String']['input']>;
+  razorpayPaymentLinkIn: InputMaybe<Array<Scalars['String']['input']>>;
+  razorpayPaymentLinkLT: InputMaybe<Scalars['String']['input']>;
+  razorpayPaymentLinkLTE: InputMaybe<Scalars['String']['input']>;
+  razorpayPaymentLinkNEQ: InputMaybe<Scalars['String']['input']>;
+  razorpayPaymentLinkNotIn: InputMaybe<Array<Scalars['String']['input']>>;
+  /** state field predicates */
+  state: InputMaybe<Scalars['String']['input']>;
+  stateContains: InputMaybe<Scalars['String']['input']>;
+  stateContainsFold: InputMaybe<Scalars['String']['input']>;
+  stateEqualFold: InputMaybe<Scalars['String']['input']>;
+  stateGT: InputMaybe<Scalars['String']['input']>;
+  stateGTE: InputMaybe<Scalars['String']['input']>;
+  stateHasPrefix: InputMaybe<Scalars['String']['input']>;
+  stateHasSuffix: InputMaybe<Scalars['String']['input']>;
+  stateIn: InputMaybe<Array<Scalars['String']['input']>>;
+  stateIsNil: InputMaybe<Scalars['Boolean']['input']>;
+  stateLT: InputMaybe<Scalars['String']['input']>;
+  stateLTE: InputMaybe<Scalars['String']['input']>;
+  stateNEQ: InputMaybe<Scalars['String']['input']>;
+  stateNotIn: InputMaybe<Array<Scalars['String']['input']>>;
+  stateNotNil: InputMaybe<Scalars['Boolean']['input']>;
   /** street field predicates */
   street: InputMaybe<Scalars['String']['input']>;
   streetContains: InputMaybe<Scalars['String']['input']>;
@@ -1479,26 +1459,45 @@ export type PageInfo = {
   startCursor: Maybe<Scalars['Cursor']['output']>;
 };
 
+export type PaymentInfo = {
+  __typename?: 'PaymentInfo';
+  payment_id: Scalars['String']['output'];
+  payment_link: Scalars['String']['output'];
+};
+
 export type Ping = {
   __typename?: 'Ping';
   success: Scalars['Boolean']['output'];
 };
 
+export type PlaceOrderInput = {
+  alternate_phone_number: InputMaybe<Scalars['String']['input']>;
+  city: InputMaybe<Scalars['String']['input']>;
+  house_number: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  phone_number: Scalars['String']['input'];
+  pincode: InputMaybe<Scalars['String']['input']>;
+  place: InputMaybe<Scalars['String']['input']>;
+  state: InputMaybe<Scalars['String']['input']>;
+  street: InputMaybe<Scalars['String']['input']>;
+};
+
 export type Product = Node & {
   __typename?: 'Product';
   category: ProductCategory;
+  code: Scalars['String']['output'];
   createdAt: Scalars['Time']['output'];
-  description: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   images: Maybe<Array<ProductImages>>;
   inCartProducts: Maybe<Array<CartProduct>>;
   isDeliverable: Scalars['Boolean']['output'];
+  longDescription: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
   orderedProducts: Maybe<Array<OrderedProduct>>;
-  price: Scalars['String']['output'];
+  price: Scalars['Int']['output'];
+  shortDescription: Maybe<Scalars['String']['output']>;
   updatedAt: Scalars['Time']['output'];
   variants: Maybe<Array<ProductVariants>>;
-  weight: Scalars['Int']['output'];
 };
 
 /** ProductCategory is enum for the field category */
@@ -1529,13 +1528,14 @@ export type ProductEdge = {
 
 export enum ProductField {
   Category = 'category',
+  Code = 'code',
   CreatedAt = 'createdAt',
-  Description = 'description',
   IsDeliverable = 'isDeliverable',
+  LongDescription = 'longDescription',
   Name = 'name',
   Price = 'price',
-  UpdatedAt = 'updatedAt',
-  Weight = 'weight'
+  ShortDescription = 'shortDescription',
+  UpdatedAt = 'updatedAt'
 }
 
 export type ProductImages = Node & {
@@ -1669,6 +1669,7 @@ export type ProductVariants = Node & {
   __typename?: 'ProductVariants';
   createdAt: Scalars['Time']['output'];
   id: Scalars['ID']['output'];
+  inCartProducts: Maybe<Array<CartProduct>>;
   product: Product;
   productID: Scalars['ID']['output'];
   quantity: Scalars['Int']['output'];
@@ -1734,6 +1735,9 @@ export type ProductVariantsWhereInput = {
   createdAtLTE: InputMaybe<Scalars['Time']['input']>;
   createdAtNEQ: InputMaybe<Scalars['Time']['input']>;
   createdAtNotIn: InputMaybe<Array<Scalars['Time']['input']>>;
+  /** in_cart_products edge predicates */
+  hasInCartProducts: InputMaybe<Scalars['Boolean']['input']>;
+  hasInCartProductsWith: InputMaybe<Array<CartProductWhereInput>>;
   /** product edge predicates */
   hasProduct: InputMaybe<Scalars['Boolean']['input']>;
   hasProductWith: InputMaybe<Array<ProductWhereInput>>;
@@ -1798,6 +1802,20 @@ export type ProductWhereInput = {
   categoryIn: InputMaybe<Array<ProductCategory>>;
   categoryNEQ: InputMaybe<ProductCategory>;
   categoryNotIn: InputMaybe<Array<ProductCategory>>;
+  /** code field predicates */
+  code: InputMaybe<Scalars['String']['input']>;
+  codeContains: InputMaybe<Scalars['String']['input']>;
+  codeContainsFold: InputMaybe<Scalars['String']['input']>;
+  codeEqualFold: InputMaybe<Scalars['String']['input']>;
+  codeGT: InputMaybe<Scalars['String']['input']>;
+  codeGTE: InputMaybe<Scalars['String']['input']>;
+  codeHasPrefix: InputMaybe<Scalars['String']['input']>;
+  codeHasSuffix: InputMaybe<Scalars['String']['input']>;
+  codeIn: InputMaybe<Array<Scalars['String']['input']>>;
+  codeLT: InputMaybe<Scalars['String']['input']>;
+  codeLTE: InputMaybe<Scalars['String']['input']>;
+  codeNEQ: InputMaybe<Scalars['String']['input']>;
+  codeNotIn: InputMaybe<Array<Scalars['String']['input']>>;
   /** created_at field predicates */
   createdAt: InputMaybe<Scalars['Time']['input']>;
   createdAtGT: InputMaybe<Scalars['Time']['input']>;
@@ -1807,22 +1825,6 @@ export type ProductWhereInput = {
   createdAtLTE: InputMaybe<Scalars['Time']['input']>;
   createdAtNEQ: InputMaybe<Scalars['Time']['input']>;
   createdAtNotIn: InputMaybe<Array<Scalars['Time']['input']>>;
-  /** description field predicates */
-  description: InputMaybe<Scalars['String']['input']>;
-  descriptionContains: InputMaybe<Scalars['String']['input']>;
-  descriptionContainsFold: InputMaybe<Scalars['String']['input']>;
-  descriptionEqualFold: InputMaybe<Scalars['String']['input']>;
-  descriptionGT: InputMaybe<Scalars['String']['input']>;
-  descriptionGTE: InputMaybe<Scalars['String']['input']>;
-  descriptionHasPrefix: InputMaybe<Scalars['String']['input']>;
-  descriptionHasSuffix: InputMaybe<Scalars['String']['input']>;
-  descriptionIn: InputMaybe<Array<Scalars['String']['input']>>;
-  descriptionIsNil: InputMaybe<Scalars['Boolean']['input']>;
-  descriptionLT: InputMaybe<Scalars['String']['input']>;
-  descriptionLTE: InputMaybe<Scalars['String']['input']>;
-  descriptionNEQ: InputMaybe<Scalars['String']['input']>;
-  descriptionNotIn: InputMaybe<Array<Scalars['String']['input']>>;
-  descriptionNotNil: InputMaybe<Scalars['Boolean']['input']>;
   /** images edge predicates */
   hasImages: InputMaybe<Scalars['Boolean']['input']>;
   hasImagesWith: InputMaybe<Array<ProductImagesWhereInput>>;
@@ -1847,6 +1849,22 @@ export type ProductWhereInput = {
   /** is_deliverable field predicates */
   isDeliverable: InputMaybe<Scalars['Boolean']['input']>;
   isDeliverableNEQ: InputMaybe<Scalars['Boolean']['input']>;
+  /** long_description field predicates */
+  longDescription: InputMaybe<Scalars['String']['input']>;
+  longDescriptionContains: InputMaybe<Scalars['String']['input']>;
+  longDescriptionContainsFold: InputMaybe<Scalars['String']['input']>;
+  longDescriptionEqualFold: InputMaybe<Scalars['String']['input']>;
+  longDescriptionGT: InputMaybe<Scalars['String']['input']>;
+  longDescriptionGTE: InputMaybe<Scalars['String']['input']>;
+  longDescriptionHasPrefix: InputMaybe<Scalars['String']['input']>;
+  longDescriptionHasSuffix: InputMaybe<Scalars['String']['input']>;
+  longDescriptionIn: InputMaybe<Array<Scalars['String']['input']>>;
+  longDescriptionIsNil: InputMaybe<Scalars['Boolean']['input']>;
+  longDescriptionLT: InputMaybe<Scalars['String']['input']>;
+  longDescriptionLTE: InputMaybe<Scalars['String']['input']>;
+  longDescriptionNEQ: InputMaybe<Scalars['String']['input']>;
+  longDescriptionNotIn: InputMaybe<Array<Scalars['String']['input']>>;
+  longDescriptionNotNil: InputMaybe<Scalars['Boolean']['input']>;
   /** name field predicates */
   name: InputMaybe<Scalars['String']['input']>;
   nameContains: InputMaybe<Scalars['String']['input']>;
@@ -1864,19 +1882,30 @@ export type ProductWhereInput = {
   not: InputMaybe<ProductWhereInput>;
   or: InputMaybe<Array<ProductWhereInput>>;
   /** price field predicates */
-  price: InputMaybe<Scalars['String']['input']>;
-  priceContains: InputMaybe<Scalars['String']['input']>;
-  priceContainsFold: InputMaybe<Scalars['String']['input']>;
-  priceEqualFold: InputMaybe<Scalars['String']['input']>;
-  priceGT: InputMaybe<Scalars['String']['input']>;
-  priceGTE: InputMaybe<Scalars['String']['input']>;
-  priceHasPrefix: InputMaybe<Scalars['String']['input']>;
-  priceHasSuffix: InputMaybe<Scalars['String']['input']>;
-  priceIn: InputMaybe<Array<Scalars['String']['input']>>;
-  priceLT: InputMaybe<Scalars['String']['input']>;
-  priceLTE: InputMaybe<Scalars['String']['input']>;
-  priceNEQ: InputMaybe<Scalars['String']['input']>;
-  priceNotIn: InputMaybe<Array<Scalars['String']['input']>>;
+  price: InputMaybe<Scalars['Int']['input']>;
+  priceGT: InputMaybe<Scalars['Int']['input']>;
+  priceGTE: InputMaybe<Scalars['Int']['input']>;
+  priceIn: InputMaybe<Array<Scalars['Int']['input']>>;
+  priceLT: InputMaybe<Scalars['Int']['input']>;
+  priceLTE: InputMaybe<Scalars['Int']['input']>;
+  priceNEQ: InputMaybe<Scalars['Int']['input']>;
+  priceNotIn: InputMaybe<Array<Scalars['Int']['input']>>;
+  /** short_description field predicates */
+  shortDescription: InputMaybe<Scalars['String']['input']>;
+  shortDescriptionContains: InputMaybe<Scalars['String']['input']>;
+  shortDescriptionContainsFold: InputMaybe<Scalars['String']['input']>;
+  shortDescriptionEqualFold: InputMaybe<Scalars['String']['input']>;
+  shortDescriptionGT: InputMaybe<Scalars['String']['input']>;
+  shortDescriptionGTE: InputMaybe<Scalars['String']['input']>;
+  shortDescriptionHasPrefix: InputMaybe<Scalars['String']['input']>;
+  shortDescriptionHasSuffix: InputMaybe<Scalars['String']['input']>;
+  shortDescriptionIn: InputMaybe<Array<Scalars['String']['input']>>;
+  shortDescriptionIsNil: InputMaybe<Scalars['Boolean']['input']>;
+  shortDescriptionLT: InputMaybe<Scalars['String']['input']>;
+  shortDescriptionLTE: InputMaybe<Scalars['String']['input']>;
+  shortDescriptionNEQ: InputMaybe<Scalars['String']['input']>;
+  shortDescriptionNotIn: InputMaybe<Array<Scalars['String']['input']>>;
+  shortDescriptionNotNil: InputMaybe<Scalars['Boolean']['input']>;
   /** updated_at field predicates */
   updatedAt: InputMaybe<Scalars['Time']['input']>;
   updatedAtGT: InputMaybe<Scalars['Time']['input']>;
@@ -1886,23 +1915,12 @@ export type ProductWhereInput = {
   updatedAtLTE: InputMaybe<Scalars['Time']['input']>;
   updatedAtNEQ: InputMaybe<Scalars['Time']['input']>;
   updatedAtNotIn: InputMaybe<Array<Scalars['Time']['input']>>;
-  /** weight field predicates */
-  weight: InputMaybe<Scalars['Int']['input']>;
-  weightGT: InputMaybe<Scalars['Int']['input']>;
-  weightGTE: InputMaybe<Scalars['Int']['input']>;
-  weightIn: InputMaybe<Array<Scalars['Int']['input']>>;
-  weightLT: InputMaybe<Scalars['Int']['input']>;
-  weightLTE: InputMaybe<Scalars['Int']['input']>;
-  weightNEQ: InputMaybe<Scalars['Int']['input']>;
-  weightNotIn: InputMaybe<Array<Scalars['Int']['input']>>;
 };
 
 export type Query = {
   __typename?: 'Query';
   CartProductExport: Maybe<Scalars['String']['output']>;
   CartProductQuery: CartProductConnection;
-  CouponExport: Maybe<Scalars['String']['output']>;
-  CouponQuery: CouponConnection;
   MemberExport: Maybe<Scalars['String']['output']>;
   MemberQuery: MemberConnection;
   OrderExport: Maybe<Scalars['String']['output']>;
@@ -1943,28 +1961,6 @@ export type QueryCartProductQueryArgs = {
   last: InputMaybe<Scalars['Int']['input']>;
   orderBy: InputMaybe<Array<CartProductOrder>>;
   where: InputMaybe<CartProductWhereInput>;
-};
-
-
-export type QueryCouponExportArgs = {
-  after: InputMaybe<Scalars['Cursor']['input']>;
-  before: InputMaybe<Scalars['Cursor']['input']>;
-  excelUrl: InputMaybe<Scalars['String']['input']>;
-  fileType: Scalars['String']['input'];
-  first: InputMaybe<Scalars['Int']['input']>;
-  last: InputMaybe<Scalars['Int']['input']>;
-  orderBy: InputMaybe<Array<CouponOrder>>;
-  where: InputMaybe<CouponWhereInput>;
-};
-
-
-export type QueryCouponQueryArgs = {
-  after: InputMaybe<Scalars['Cursor']['input']>;
-  before: InputMaybe<Scalars['Cursor']['input']>;
-  first: InputMaybe<Scalars['Int']['input']>;
-  last: InputMaybe<Scalars['Int']['input']>;
-  orderBy: InputMaybe<Array<CouponOrder>>;
-  where: InputMaybe<CouponWhereInput>;
 };
 
 
@@ -2129,25 +2125,14 @@ export type TaskState = {
  * Input was generated by ent.
  */
 export type UpdateCartProductInput = {
+  productCode: InputMaybe<Scalars['String']['input']>;
   productID: InputMaybe<Scalars['ID']['input']>;
   quantity: InputMaybe<Scalars['Int']['input']>;
   toDeliver: InputMaybe<Scalars['Boolean']['input']>;
   updatedAt: InputMaybe<Scalars['Time']['input']>;
   userID: InputMaybe<Scalars['ID']['input']>;
-  variant: InputMaybe<Scalars['String']['input']>;
-};
-
-/**
- * UpdateCouponInput is used for update Coupon object.
- * Input was generated by ent.
- */
-export type UpdateCouponInput = {
-  couponCode: InputMaybe<Scalars['String']['input']>;
-  discountPercentage: InputMaybe<Scalars['Int']['input']>;
-  email: InputMaybe<Scalars['String']['input']>;
-  redeemed: InputMaybe<Scalars['Boolean']['input']>;
-  redeemedOn: InputMaybe<Scalars['Time']['input']>;
-  updatedAt: InputMaybe<Scalars['Time']['input']>;
+  variantID: InputMaybe<Scalars['ID']['input']>;
+  variantName: InputMaybe<Scalars['String']['input']>;
 };
 
 /**
@@ -2158,9 +2143,7 @@ export type UpdateMemberInput = {
   addInCartProductIDs: InputMaybe<Array<Scalars['ID']['input']>>;
   addOrderIDs: InputMaybe<Array<Scalars['ID']['input']>>;
   addOrderedProductIDs: InputMaybe<Array<Scalars['ID']['input']>>;
-  alternatePhoneNumber: InputMaybe<Scalars['String']['input']>;
   city: InputMaybe<Scalars['String']['input']>;
-  clearAlternatePhoneNumber: InputMaybe<Scalars['Boolean']['input']>;
   clearCity: InputMaybe<Scalars['Boolean']['input']>;
   clearDeptName: InputMaybe<Scalars['Boolean']['input']>;
   clearEventName: InputMaybe<Scalars['Boolean']['input']>;
@@ -2173,6 +2156,7 @@ export type UpdateMemberInput = {
   clearPincode: InputMaybe<Scalars['Boolean']['input']>;
   clearPlace: InputMaybe<Scalars['Boolean']['input']>;
   clearProfilePicURL: InputMaybe<Scalars['Boolean']['input']>;
+  clearState: InputMaybe<Scalars['Boolean']['input']>;
   clearStreet: InputMaybe<Scalars['Boolean']['input']>;
   deptName: InputMaybe<Scalars['String']['input']>;
   email: InputMaybe<Scalars['String']['input']>;
@@ -2188,6 +2172,7 @@ export type UpdateMemberInput = {
   removeOrderIDs: InputMaybe<Array<Scalars['ID']['input']>>;
   removeOrderedProductIDs: InputMaybe<Array<Scalars['ID']['input']>>;
   role: InputMaybe<MemberRole>;
+  state: InputMaybe<Scalars['String']['input']>;
   street: InputMaybe<Scalars['String']['input']>;
   updatedAt: InputMaybe<Scalars['Time']['input']>;
 };
@@ -2199,25 +2184,34 @@ export type UpdateMemberInput = {
 export type UpdateOrderInput = {
   addOrderedProductIDs: InputMaybe<Array<Scalars['ID']['input']>>;
   alternatePhoneNumber: InputMaybe<Scalars['String']['input']>;
+  amount: InputMaybe<Scalars['Int']['input']>;
   city: InputMaybe<Scalars['String']['input']>;
   clearAlternatePhoneNumber: InputMaybe<Scalars['Boolean']['input']>;
   clearCity: InputMaybe<Scalars['Boolean']['input']>;
   clearHouseNo: InputMaybe<Scalars['Boolean']['input']>;
   clearLandmark: InputMaybe<Scalars['Boolean']['input']>;
   clearOrderedProducts: InputMaybe<Scalars['Boolean']['input']>;
-  clearPhoneNumber: InputMaybe<Scalars['Boolean']['input']>;
+  clearPaymentStatusResponse: InputMaybe<Scalars['Boolean']['input']>;
   clearPincode: InputMaybe<Scalars['Boolean']['input']>;
   clearPlace: InputMaybe<Scalars['Boolean']['input']>;
+  clearState: InputMaybe<Scalars['Boolean']['input']>;
   clearStreet: InputMaybe<Scalars['Boolean']['input']>;
   email: InputMaybe<Scalars['String']['input']>;
   houseNo: InputMaybe<Scalars['String']['input']>;
   landmark: InputMaybe<Scalars['String']['input']>;
+  name: InputMaybe<Scalars['String']['input']>;
   orderDate: InputMaybe<Scalars['Time']['input']>;
-  paidAmount: InputMaybe<Scalars['Float']['input']>;
+  paymentReferenceID: InputMaybe<Scalars['String']['input']>;
+  paymentRequestJSON: InputMaybe<Scalars['JSON']['input']>;
+  paymentStatus: InputMaybe<OrderPaymentStatus>;
+  paymentStatusResponse: InputMaybe<Scalars['JSON']['input']>;
   phoneNumber: InputMaybe<Scalars['String']['input']>;
   pincode: InputMaybe<Scalars['String']['input']>;
   place: InputMaybe<Scalars['String']['input']>;
+  razorpayPaymentID: InputMaybe<Scalars['String']['input']>;
+  razorpayPaymentLink: InputMaybe<Scalars['String']['input']>;
   removeOrderedProductIDs: InputMaybe<Array<Scalars['ID']['input']>>;
+  state: InputMaybe<Scalars['String']['input']>;
   street: InputMaybe<Scalars['String']['input']>;
   updatedAt: InputMaybe<Scalars['Time']['input']>;
   userID: InputMaybe<Scalars['ID']['input']>;
@@ -2258,21 +2252,23 @@ export type UpdateProductInput = {
   addOrderedProductIDs: InputMaybe<Array<Scalars['ID']['input']>>;
   addVariantIDs: InputMaybe<Array<Scalars['ID']['input']>>;
   category: InputMaybe<ProductCategory>;
-  clearDescription: InputMaybe<Scalars['Boolean']['input']>;
   clearImages: InputMaybe<Scalars['Boolean']['input']>;
   clearInCartProducts: InputMaybe<Scalars['Boolean']['input']>;
+  clearLongDescription: InputMaybe<Scalars['Boolean']['input']>;
   clearOrderedProducts: InputMaybe<Scalars['Boolean']['input']>;
+  clearShortDescription: InputMaybe<Scalars['Boolean']['input']>;
   clearVariants: InputMaybe<Scalars['Boolean']['input']>;
-  description: InputMaybe<Scalars['String']['input']>;
+  code: InputMaybe<Scalars['String']['input']>;
   isDeliverable: InputMaybe<Scalars['Boolean']['input']>;
+  longDescription: InputMaybe<Scalars['String']['input']>;
   name: InputMaybe<Scalars['String']['input']>;
-  price: InputMaybe<Scalars['String']['input']>;
+  price: InputMaybe<Scalars['Int']['input']>;
   removeImageIDs: InputMaybe<Array<Scalars['ID']['input']>>;
   removeInCartProductIDs: InputMaybe<Array<Scalars['ID']['input']>>;
   removeOrderedProductIDs: InputMaybe<Array<Scalars['ID']['input']>>;
   removeVariantIDs: InputMaybe<Array<Scalars['ID']['input']>>;
+  shortDescription: InputMaybe<Scalars['String']['input']>;
   updatedAt: InputMaybe<Scalars['Time']['input']>;
-  weight: InputMaybe<Scalars['Int']['input']>;
 };
 
 /**
@@ -2280,8 +2276,11 @@ export type UpdateProductInput = {
  * Input was generated by ent.
  */
 export type UpdateProductVariantsInput = {
+  addInCartProductIDs: InputMaybe<Array<Scalars['ID']['input']>>;
+  clearInCartProducts: InputMaybe<Scalars['Boolean']['input']>;
   productID: InputMaybe<Scalars['ID']['input']>;
   quantity: InputMaybe<Scalars['Int']['input']>;
+  removeInCartProductIDs: InputMaybe<Array<Scalars['ID']['input']>>;
   updatedAt: InputMaybe<Scalars['Time']['input']>;
   variant: InputMaybe<Scalars['String']['input']>;
 };
