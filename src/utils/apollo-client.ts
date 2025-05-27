@@ -9,7 +9,7 @@ export function createApolloClient() {
 
     const authLink = setContext((_, { headers }) => {
         // Get token from localStorage or elsewhere
-        const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+        const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
 
         return {
             headers: {
